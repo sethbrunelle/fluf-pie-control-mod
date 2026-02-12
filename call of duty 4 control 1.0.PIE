@@ -1,0 +1,115 @@
+﻿/*
+Call of Duty 4 Wiimote Control
+
+version 1.0
+
+Hold like a gun, using Nunchuk Z button to shoot, and Holding the B button to aim
+I'll make a picture for controls    later
+
+note: tempermental: if nunchuk is plugged in, motionplus sometimes decides to not work.
+
+MOUSE CONTROL by lednerd
+
+*/
+var.MoveButton = wiimote.B
+
+//BALANCEBOARD CONTROL VERSION 1.01 (jump changed to >110 from <5
+// note: needs fix for crouch
+/*if BalanceBoard.Exists = true{
+var.weight = BalanceBoard.Weight
+var.right = BalanceBoard.weightright
+var.left = balanceboard.weightleft
+var.ratioright = var.right / var.left
+var.ratioleft = var.left / var.right
+if var.ratioright > 3 and < 10 then var.leanright = true
+if var.ratioright < 3 or > 10 then var.leanright = false
+if var.ratioleft > 3 and < 10 then var.leanleft = true
+if var.ratioleft < 3 or > 10 then var.leanleft = false
+if var.ratioleft > 10 or var.ratioright > 10 then var.crouch = true
+if var.ratioleft < 10 and var.ratioright < 10 then var.crouch = false
+if var.weight > 110 then var.jump = true
+if var.weight < 110 then var.jump = false
+keyboard.space = var.jump
+keyboard.e = var.leanright
+keyboard.q = var.leanleft
+keyboard.c = var.crouch
+}
+//balanceboard shit^
+*/
+
+//Movement
+keyboard.w = Nunchuk.Up
+keyboard.a = Nunchuk.Left
+keyboard.d = Nunchuk.Right
+keyboard.s = Nunchuk.Down
+keyboard.space = nunchuk.swingvertical
+keyboard.c = wiimote.plus
+
+
+//general action
+keyboard.v = Nunchuk.Stabbing
+keyboard.6 = wiimote.One
+keyboard.1 = wiimote.Minus
+keyboard.5 = wiimote.two
+keyboard.f = wiimote.down
+keyboard.LeftShift = nunchuk.C
+mouse.LeftButton = Nunchuk.Z
+mouse.RightButton = wiimote.A
+
+var.Speed = 75   // 0 to 100
+
+PIE.FrameRate = 120hz
+if wiimote.HasMotionPlus = false then debug = "WiiMotion Plus NOT DETECTED!"
+if wiimote.HasMotionPlus = true and var.MoveButton = true {
+   var.YawSpeed = wiimote.MotionPlus.YawSpeed
+   var.PitchSpeed = wiimote.MotionPlus.PitchSpeed
+   if SameValue( Smooth(wiimote.SmoothRoll, 10), wiimote.SmoothRoll, 10) then var.Roll = Smooth(wiimote.SmoothRoll, 10) else var.Roll = wiimote.SmoothRoll
+   if var.Roll < 0 and var.Roll >= -90 {
+      var.XYswap = 1 - EnsureMapRange(var.Roll, -90, 0, 0, 1)
+      var.RightDown = -1
+      var.TopUp = 1
+   }
+   if var.Roll <= 90 and var.Roll >= 0 {
+      var.XYswap = 1 - EnsureMapRange(var.Roll, 90, 0, 0, 1)
+      var.RightDown = 1
+      var.TopUp = 1
+   }
+   if var.Roll > 90 and var.Roll <= 180 {
+      var.XYswap = 1 - EnsureMapRange(var.Roll, 90, 180, 0, 1)
+      var.RightDown = 1
+      var.TopUp = -1
+   }
+   if var.Roll < -90 and var.Roll >= -180 {
+      var.XYswap = 1 - EnsureMapRange(var.Roll, -90, -180, 0, 1)
+      var.RightDown = -1
+      var.TopUp = -1
+   }
+   var.SpeedX = var.TopUp * var.YawSpeed - ( var.TopUp * var.YawSpeed * var.XYswap ) + ( var.RightDown * var.PitchSpeed * var.XYswap )
+   var.SpeedY = var.TopUp * var.PitchSpeed - ( var.TopUp * var.PitchSpeed * var.XYswap) + ( -var.RightDown * var.YawSpeed * var.XYswap )
+   mouse.DirectInputX = int(var.MouseX)
+   mouse.DirectInputY = int(var.MouseY)
+   var.MouseX = var.MouseX + ( var.SpeedX / (10500000 - EnsureMapRange(var.Speed, 0, 100, 0, 10000000) ) )
+   var.MouseY = var.MouseY - ( var.SpeedY / (10500000 - EnsureMapRange(var.Speed, 0, 100, 0, 10000000) ) )
+
+
+/* // for mouse.x and mouse.y instead
+   mouse.x = var.MouseX
+   mouse.y = var.MouseY
+   var.MouseX = var.MouseX + ( var.SpeedX / (20500 - EnsureMapRange(var.Speed, 0, 100, 0, 20000) ) )
+   var.MouseY = var.MouseY - ( var.SpeedY / (20500 - EnsureMapRange(var.Speed, 0, 100, 0, 20000) ) )
+*/
+}
+if var.MoveButton = false {
+   var.MouseX = mouse.DirectInputX
+   var.MouseY = mouse.DirectInputY
+
+   keyboard.g = Nunchuk.C and Nunchuk.SwingDown
+   keyboard.4 = Nunchuk.Z and Nunchuk.SwingDown
+
+
+/* // for mouse.x and mouse.y insteadte.Sw
+   var.MouseX = mouse.x
+   var.MouseY = mouse.y
+*/
+}
+

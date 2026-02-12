@@ -1,0 +1,174 @@
+﻿
+var.weight = BalanceBoard.Weight
+var.right = balanceboard.WeightFront/balanceboard.Weight
+var.left = balanceboard.WeightBack/balanceboard.Weight
+var.up = BalanceBoard.weightright/balanceboard.Weight
+var.down = balanceboard.weightleft/balanceboard.Weight
+
+if wiimote.two {
+var.calibjump = var.weight+var.weight/2.7              //calibtration
+var.calibair = var.weight/3.5
+}
+var.smoothjump = smooth(var.weight,30)+var.calibair
+
+if var.weight>5 and var.calibjump>5{
+if var.weight>var.calibjump or var.weight>var.smoothjump  {
+   var.jump = true
+else
+   var.jump = false
+}
+}
+
+var.butterbutton = wiimote.lookingatrightwatch or wiimote.LookingAtWatch
+var.grabbutton = wiimote.B
+
+var.jumpbutton = wiimote.A
+
+//same a-lock as ssx with flailing, bboard as right analog if no grab
+
+var.xaxis = var.right - var.left
+var.yaxis = var.up - var.down
+
+var.grabbutton = wiimote.B
+
+//armspin shit
+
+//spin test
+
+//==============================================================
+if var.weight > 5 {
+   var.YawSpeed = wiimote.MotionPlus.YawSpeed
+   var.PitchSpeed = wiimote.MotionPlus.PitchSpeed
+   if SameValue( Smooth(wiimote.SmoothRoll, 10), wiimote.SmoothRoll, 10) then var.Roll = Smooth(wiimote.SmoothRoll, 10) else var.Roll = wiimote.SmoothRoll
+   if var.Roll < 0 and var.Roll >= -90 {
+      var.XYswap = 1 - EnsureMapRange(var.Roll, -90, 0, 0, 1)
+      var.RightDown = -1
+      var.TopUp = 1
+   }
+   if var.Roll <= 90 and var.Roll >= 0 {
+      var.XYswap = 1 - EnsureMapRange(var.Roll, 90, 0, 0, 1)
+      var.RightDown = 1
+      var.TopUp = 1
+   }
+   if var.Roll > 90 and var.Roll <= 180 {
+      var.XYswap = 1 - EnsureMapRange(var.Roll, 90, 180, 0, 1)
+      var.RightDown = 1
+      var.TopUp = -1
+   }
+   if var.Roll < -90 and var.Roll >= -180 {
+      var.XYswap = 1 - EnsureMapRange(var.Roll, -90, -180, 0, 1)
+      var.RightDown = -1
+      var.TopUp = -1
+   }
+   var.SpeedX = var.TopUp * var.YawSpeed - ( var.TopUp * var.YawSpeed * var.XYswap ) + ( var.RightDown * var.PitchSpeed * var.XYswap )
+   var.SpeedY = var.TopUp * var.PitchSpeed - ( var.TopUp * var.PitchSpeed * var.XYswap) + ( -var.RightDown * var.YawSpeed * var.XYswap )
+//}
+//--------------------------------------------------------------------------
+
+//var.armspinx = ensuremaprange(var.speedx,-400,-50,-1.5,0) + ensuremaprange(var.speedx,50,400,0,1.5)
+//var.armspiny = ensuremaprange(var.speedy,-700,-250,-1.5,0) + ensuremaprange(var.speedy,250,700,0,1.5)
+
+//button axis assignments
+//if var.weight>5{
+
+var.speedspin = var.speedx
+if var.speedspin > 280 {
+   var.rightspin = 2
+   else
+   var.rightspin = 0
+   }
+if var.speedspin < -280 {
+   var.leftspin = 2
+   else
+   var.leftspin = 0
+   }
+var.flipspeed = var.speedy
+if var.flipspeed > 660 {
+   var.backflip = 2
+   else
+   var.backflip = 0
+   }
+if var.flipspeed < -660 {
+   var.frontflip = 2
+   else
+   var.frontflip = 0
+   }
+
+if var.leftspin==2 and var.jumpbutton==true {
+   var.lefty = 2
+}
+if var.leftspin==0 and var.jumpbutton==true {
+   var.lefty = 0
+}
+if var.rightspin==2 and var.jumpbutton==true {
+   var.righty = 2
+}
+if var.rightspin==0 and var.jumpbutton==true {
+   var.righty = 0
+}
+if var.backflip==2 and var.jumpbutton==true {
+   var.backy = 2
+}
+if var.backflip==0 and var.jumpbutton==true {
+   var.backy = 0
+}
+if var.frontflip==2 and var.jumpbutton==true {
+   var.fronty = 2
+}
+if var.frontflip==0 and var.jumpbutton==true {
+   var.fronty = 0
+}
+
+if var.butterbutton == false and var.jumpbutton == false and var.grabbutton == false{
+PPJoy1.Analog0 = ensuremaprange(var.xaxis,-.7,.7,-1,1) - var.leftspin - var.lefty + var.rightspin + var.righty //+ var.armspinx //adjust as necessary
+PPJoy1.Analog1 = ensuremaprange(var.yaxis,-.77,.7,-1,1) + var.backflip + var.backy - var.frontflip - var.fronty// + var.armspiny //adjust as necessary
+PPJoy1.Analog2 = 0
+PPJoy1.Analog3 = 0
+}
+
+if var.grabbutton == true{
+PPJoy1.Analog0 = ensuremaprange(var.xaxis,-.8,.8,-1,1) - var.leftspin - var.lefty + var.rightspin + var.righty
+PPJoy1.Analog1 = ensuremaprange(var.yaxis,-.8,.8,-1,1) + var.backflip + var.backy - var.frontflip - var.fronty
+PPJoy1.Analog2 = sin(wiimote.Yaw)
+PPJoy1.Analog3 = cos(wiimote.Yaw)
+}
+
+if var.grabbutton == false and (var.butterbutton == true or var.jumpbutton == true){       //add a-lock swing like ssx
+PPJoy1.Analog2 = ensuremaprange(var.xaxis,-.8,.8,-1,1)
+PPJoy1.Analog3 = -ensuremaprange(var.yaxis,-.8,.8,-1,1)
+PPJoy1.Analog0 = /*.5*ensuremaprange(var.xaxis,-.8,.8,-1,1) +*/ - var.leftspin - var.lefty + var.rightspin + var.righty
+PPJoy1.Analog1 = /*.5*ensuremaprange(var.yaxis,-.8,.8,-1,1) +*/ var.backflip + var.backy - var.frontflip - var.fronty
+}
+}
+if var.weight<5{  //menu control
+PPJoy1.Analog0 = 0
+PPJoy1.Analog1 = 0
+PPJoy1.Analog2 = 0
+PPJoy1.Analog3 = 0
+}
+//if var.weight>5{                                //gameplay controls
+PPJoy1.Digital0 = var.jump or var.jumpbutton
+PPJoy1.Digital1 = var.grabbutton
+PPJoy1.Digital2 = wiimote.Down  //secondary tricks
+PPJoy1.Digital3 =  wiimote.Up
+//PPJoy1.Digital4 = wiimote.Left
+//PPJoy1.Digital5 = wiimote.Right
+PPJoy1.Digital6 = wiimote.One
+PPJoy1.Digital7 = wiimote.home
+PPJoy1.Digital8 = key.1
+PPJoy1.Digital9 = key.2
+PPJoy1.Digital10 = key.3
+PPJoy1.Digital11 = key.4
+PPJoy1.Digital12 = key.5
+
+PPJoy1.Digital13 = key.6
+//PPJoy1.Digital14 = key.7
+
+
+
+
+
+PPJoy1.Digital15 = wiimote.Plus
+PPJoy1.Digital14 = wiimote.Minus
+
+

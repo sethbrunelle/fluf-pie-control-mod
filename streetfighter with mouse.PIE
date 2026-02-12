@@ -1,0 +1,607 @@
+﻿var.MoveButton = wiimote.B
+mouse.LeftButton = wiimote.A
+mouse.RightButton = wiimote.minus
+mouse.MiddleButton = wiimote.plus
+keyboard.space = wiimote.One
+mouse.wheeldown = wiimote.Down
+mouse.wheelup = wiimote.Up
+esc = wiimote.home
+key.v = wiimote.Two
+
+var.Speed = 75   // 0 to 100
+
+PIE.FrameRate = 240hz
+if wiimote.HasMotionPlus = false then debug = "WiiMotion Plus NOT DETECTED!"
+if wiimote.HasMotionPlus = true and var.MoveButton = true {
+   var.YawSpeed = wiimote.MotionPlus.YawSpeed
+   var.PitchSpeed = wiimote.MotionPlus.PitchSpeed
+   if SameValue( Smooth(wiimote.SmoothRoll, 10), wiimote.SmoothRoll, 10) then var.Roll = Smooth(wiimote.SmoothRoll, 10) else var.Roll = wiimote.SmoothRoll
+   if var.Roll < 0 and var.Roll >= -90 {
+      var.XYswap = 1 - EnsureMapRange(var.Roll, -90, 0, 0, 1)
+      var.RightDown = -1
+      var.TopUp = 1
+   }
+   if var.Roll <= 90 and var.Roll >= 0 {
+      var.XYswap = 1 - EnsureMapRange(var.Roll, 90, 0, 0, 1)
+      var.RightDown = 1
+      var.TopUp = 1
+   }
+   if var.Roll > 90 and var.Roll <= 180 {
+      var.XYswap = 1 - EnsureMapRange(var.Roll, 90, 180, 0, 1)
+      var.RightDown = 1
+      var.TopUp = -1
+   }
+   if var.Roll < -90 and var.Roll >= -180 {
+      var.XYswap = 1 - EnsureMapRange(var.Roll, -90, -180, 0, 1)
+      var.RightDown = -1
+      var.TopUp = -1
+   }
+   var.SpeedX = var.TopUp * var.YawSpeed - ( var.TopUp * var.YawSpeed * var.XYswap ) + ( var.RightDown * var.PitchSpeed * var.XYswap )
+   var.SpeedY = var.TopUp * var.PitchSpeed - ( var.TopUp * var.PitchSpeed * var.XYswap) + ( -var.RightDown * var.YawSpeed * var.XYswap )
+   mouse.DirectInputX = int(var.MouseX)
+   mouse.DirectInputY = int(var.MouseY)
+   var.MouseX = var.MouseX + ( var.SpeedX / (10500000 - EnsureMapRange(var.Speed, 0, 100, 0, 10000000) ) )
+   var.MouseY = var.MouseY - ( var.SpeedY / (10500000 - EnsureMapRange(var.Speed, 0, 100, 0, 10000000) ) )
+/* // for mouse.x and mouse.y instead
+   mouse.x = var.MouseX
+   mouse.y = var.MouseY
+   var.MouseX = var.MouseX + ( var.SpeedX / (20500 - EnsureMapRange(var.Speed, 0, 100, 0, 20000) ) )
+   var.MouseY = var.MouseY - ( var.SpeedY / (20500 - EnsureMapRange(var.Speed, 0, 100, 0, 20000) ) )
+*/
+}
+if var.MoveButton = false {
+   var.MouseX = mouse.DirectInputX
+   var.MouseY = mouse.DirectInputY
+}
+
+/* // for mouse.x and mouse.y instead
+   var.MouseX = mouse.x
+   var.MouseY = mouse.y
+*/
+}
+
+
+/*super street fighter IV Arcade Edition
+____________________________________________________
+
+FAAST > combo keyframes > GlovePie > key macro > PPJoy > SSFIV
+               -and-
+FAAST > keys > GlovePie > PPJoy > SSFIV
+
+
+plus voice if kinect microphone is working
+__________________________________________
+basic controls:
+                          pad      keys
+joystick u/d/l/r       5/2/1/3      5/1/2/3
+start                      *            a
+select                     /            s
+punch: light               4            4
+       -----medium         e            d
+       heavy
+       ----L+M+H  ?        6            6
+kick:  light               7            7
+       ---medium
+       heavy
+       ----L+M+H  ?        8            8
+throw/grab                 q            9
+focus attack               0            0
+taunt                      w            -
+
+15-17 buttons/actions
+perhaps leave out medium!
+____________________________________________________
+combos!
+
+*/
+
+//number of players
+//var.playercount = 2
+
+//player1
+//if var.playercount == (1 or 2) { //this is just here so i can collapse list in notepad++
+PPJoy1.Digital9 = swallow(divide)
+PPJoy1.Digital0 = var.focus1
+PPJoy1.Digital1 = swallow(numpad1)
+PPJoy1.Digital2 = swallow(numpad2)
+PPJoy1.Digital3 = swallow(numpad3)
+PPJoy1.Digital4 = swallow(numpad4)
+PPJoy1.Digital5 = swallow(numpad5)
+PPJoy1.Digital6 = swallow(numpad6)
+PPJoy1.Digital7 = swallow(numpad7)
+PPJoy1.Digital8 = swallow(numpad8)
+PPJoy1.Digital10 = swallow(key.Q)
+PPJoy1.Digital11 = swallow(key.w)
+PPJoy1.Digital12 = swallow(key.e)
+PPJoy1.Digital13 = swallow(multiply)
+
+if swallow(numpad0) {
+   var.focus1 = true                        //primitive focus smoothing
+   wait 600ms
+   if swallow(numpad0) == false {
+      var.focus1 = false
+   }
+}
+
+//key.o = var.focus1  //test
+
+//player2
+//if var.playercount == (2) {
+PPJoy3.Digital1 = swallow(key.1)
+PPJoy3.Digital2 = swallow(key.2)
+PPJoy3.Digital3 = swallow(key.3)
+PPJoy3.Digital4 = swallow(key.4)
+PPJoy3.Digital5 = swallow(key.5)
+PPJoy3.Digital6 = swallow(key.6)
+PPJoy3.Digital7 = swallow(key.7)
+PPJoy3.Digital8 = swallow(key.8)
+PPJoy3.Digital9 = swallow(key.9)
+PPJoy3.Digital0 = swallow(key.0)
+PPJoy3.Digital10 = swallow(key.a)
+PPJoy3.Digital12 = swallow(key.s)
+PPJoy3.Digital13 = swallow(key.d)
+PPJoy3.Digital11 = swallow(key.Minus)
+
+if swallow(key.0) {
+   var.2focus1 = true                        //primitive focus smoothing
+   wait 600ms
+   if swallow(key.0) == false {
+      var.2focus1 = false
+   }
+}
+//}
+
+
+//voice enable
+if said("choose character") or said("listen") or said("character select") {
+   var.listen=true
+   say("name player then selection")
+}
+if said("all set") or said("ready to fight") or said("stop listening") {
+   var.listen=false
+   say("fight!")
+}
+//var.listen = true //default
+
+if var.listen == true { //selecting character
+if said("player one"){
+   var.player = 1
+}
+if said("player two"){
+   var.player = 2
+}
+if var.player == 1 {
+if said("ibuki") {
+   var.character = "ibuki"
+   say("ibuki selected player 1")
+   }
+   if said("ryu") {
+   var.character = "ryu"
+   say("ryu selected player 1")
+   }
+   if said("evil ryu") {
+   var.character = "evil ryu"
+   say("evil ryu selected player 1")
+   }
+   if said("guile") {
+   var.character = "guile"
+   say("guile selected player 1")
+   }
+   if said("sakura") {
+   var.character = "sakura"
+   say("sahkura selected player 1")
+   }
+   }
+if var.player == 2 {
+if said("ibuki") {
+   var.character2 = "ibuki"
+   say("ibuki selected player 2")
+   }
+   if said("ryu") {
+   var.character2 = "ryu"
+   say("ryu selected player 2")
+   }
+   if said("evil ryu") {
+   var.character2 = "evil ryu"
+   say("evil ryu selected player 2")
+   }
+   if said("guile") {
+   var.character2 = "guile"
+   say("guile selected player 2")
+   }
+   if said("sakura") {
+   var.character2 = "sakura"
+   say("sahkura selected player 2")
+   }
+   }
+}
+
+
+//combosssss!
+if var.character == "ibuki" {
+if swallow(key.z) == true {        
+   var.hadoken1 = true
+   numpad4 = false
+   wait 1s
+   var.hadoken1 = false
+}
+if swallow(key.x) and var.hadoken1=true {
+   var.hadoken = true
+   var.hadoken1 = false
+   wait 50ms
+   var.hadoken = false
+}
+if var.hadoken == true {  // L-powerball, R-neck breaker
+     numpad3 = true
+     wait 20ms
+     numpad2 = true
+     numpad3 = false
+     wait 20ms
+     numpad1 = true
+     numpad2 = false
+     wait 20ms
+     numpad1 = false
+     wait 20ms
+     numpad6 = true
+     wait 50ms
+     numpad6 = false
+}
+if swallow(key.R) == true {  // up kick
+     numpad3 = true
+     wait 20ms
+     numpad2 = true
+     numpad3 = false
+     wait 20ms
+     numpad3 = true
+     numpad2 = false
+     wait 20ms
+     numpad3 = false
+     wait 20ms
+     numpad8 = true
+     wait 50ms
+     numpad8 = false
+}
+if swallow(key.T) == true {  // sidekick
+     numpad2 = true
+     wait 20ms
+     numpad1 = true
+     wait 20ms
+     numpad2 = false
+     wait 20ms
+     numpad8 = true
+     wait 20ms
+     numpad1 = false
+     wait 20ms
+     numpad8 = false
+}
+if swallow(key.Y) == true {  // jump double kick
+     numpad1 = true
+     wait 20ms
+     numpad2 = true
+     wait 20ms
+     numpad1 = false
+     wait 20ms
+     numpad1 = true
+     wait 20ms
+     numpad2 = false
+     wait 20ms
+     numpad8 = true
+     wait 20ms
+     numpad1 = false
+     wait 20ms
+     numpad8 = false
+}
+if swallow(key.u) == true { //  ultra combo II
+numpad2 = true
+wait 20ms
+numpad3 = true
+wait 20ms
+numpad2 = false
+wait 20ms
+numpad3 = false
+wait 20ms
+numpad2 = true
+wait 20ms
+numpad3 = true
+wait 20ms
+numpad2 = false
+wait 20ms
+numpad3 = false
+numpad8 = true
+wait 20ms
+numpad8 = false
+wait 50ms
+numpad8 = true
+wait 20ms
+numpad8 = false
+wait 50ms
+numpad8 = true
+wait 20ms
+numpad8 = false
+}
+}
+if var.character=="evil ryu" or var.character=="ryu" {
+//hadoken combo from faast
+if swallow(key.z) == true {        
+   var.hadoken1 = true
+   numpad4 = false
+   wait 1s
+   var.hadoken1 = false
+}
+if swallow(key.x) and var.hadoken1=true {
+   var.hadoken = true
+   var.hadoken1 = false
+   wait 50ms
+   var.hadoken = false
+}
+if var.hadoken == true { // hadoken macro
+numpad2 = true
+wait 20ms
+numpad3 = true
+wait 20ms
+numpad2 = false
+wait 20ms
+numpad6 = true
+wait 20ms
+numpad3 = false
+wait 20ms
+numpad6 = false
+}
+if swallow(key.R) == true { // shoryuken
+numpad3 = true
+wait 20ms
+numpad2 = true
+wait 20ms
+numpad3 = false
+wait 20ms
+numpad3 = true
+wait 20ms
+numpad2 = false
+wait 20ms
+numpad6 = true
+wait 20ms
+numpad3 = false
+wait 20ms
+numpad6 = false
+}
+if swallow(key.t) == true { // some kick spin macro
+numpad2 = true
+wait 20ms
+numpad1 = true
+wait 20ms
+numpad2 = false
+wait 20ms
+numpad8 = true
+wait 20ms
+numpad1 = false
+wait 20ms
+numpad8 = false
+} // /shoryuken
+if swallow(key.u) == true { // ultra combo macro
+numpad2 = true
+wait 20ms
+numpad3 = true
+wait 20ms
+numpad2 = false
+wait 20ms
+numpad3 = false
+wait 20ms
+numpad2 = true
+wait 20ms
+numpad3 = true
+wait 20ms
+numpad2 = false
+wait 20ms
+numpad3 = false
+wait 20ms
+numpad8 = true
+wait 20ms
+numpad8 = false
+wait 20ms
+numpad8 = true
+wait 20ms
+numpad8 = false
+wait 20ms
+numpad8 = true
+wait 20ms
+numpad8 = false
+}
+
+}//ryu
+
+//player two combos
+
+
+if var.character2 == "ibuki" {
+if swallow(key.c) == true {        
+   var.2hadoken1 = true
+   key.4 = false
+   wait 1s
+   var.2hadoken1 = false
+}
+if swallow(key.v) and var.2hadoken1=true {
+   var.2hadoken = true
+   var.2hadoken1 = false
+   wait 50ms
+   var.2hadoken = false
+}
+if var.2hadoken == true {  // L-powerball, R-neck breaker
+     key.3 = true
+     wait 20ms
+     key.2 = true
+     key.3 = false
+     wait 20ms
+     key.1 = true
+     key.2 = false
+     wait 20ms
+     key.1 = false
+     wait 20ms
+     key.6 = true
+     wait 50ms
+     key.6 = false
+}
+if swallow(key.f) == true {  // up kick
+     key.3 = true
+     wait 20ms
+     key.2 = true
+     key.3 = false
+     wait 20ms
+     key.3 = true
+     key.2 = false
+     wait 20ms
+     key.3 = false
+     wait 20ms
+     key.8 = true
+     wait 50ms
+     key.8 = false
+}
+if swallow(key.g) == true {  // sidekick
+     key.2 = true
+     wait 20ms
+     key.1 = true
+     wait 20ms
+     key.2 = false
+     wait 20ms
+     key.8 = true
+     wait 20ms
+     key.1 = false
+     wait 20ms
+     key.8 = false
+}
+if swallow(key.h) == true {  // jump double kick
+     key.1 = true
+     wait 20ms
+     key.2 = true
+     wait 20ms
+     key.1 = false
+     wait 20ms
+     key.1 = true
+     wait 20ms
+     key.2 = false
+     wait 20ms
+     key.8 = true
+     wait 20ms
+     key.1 = false
+     wait 20ms
+     key.8 = false
+}
+if swallow(key.j) == true { //  ultra combo II
+key.2 = true
+wait 20ms
+key.3 = true
+wait 20ms
+key.2 = false
+wait 20ms
+key.3 = false
+wait 20ms
+key.2 = true
+wait 20ms
+key.3 = true
+wait 20ms
+key.2 = false
+wait 20ms
+key.3 = false
+key.8 = true
+wait 20ms
+key.8 = false
+wait 50ms
+key.8 = true
+wait 20ms
+key.8 = false
+wait 50ms
+key.8 = true
+wait 20ms
+key.8 = false
+}
+}
+if var.character2 =="evil ryu" or var.character2 =="ryu" {
+
+//hadoken combo from faast
+if swallow(key.c) == true {        
+   var.2hadoken1 = true
+   key.4 = false
+   wait 1s
+   var.2hadoken1 = false
+}
+if swallow(key.v) and var.2hadoken1=true {
+   var.2hadoken = true
+   var.2hadoken1 = false
+   wait 50ms
+   var.2hadoken = false
+}
+if var.2hadoken == true { // hadoken macro
+key.2 = true
+wait 20ms
+key.3 = true
+wait 20ms
+key.2 = false
+wait 20ms
+key.6 = true
+wait 20ms
+key.3 = false
+wait 20ms
+key.6 = false
+}
+if swallow(key.f) == true { // shoryuken
+key.3 = true
+wait 20ms
+key.2 = true
+wait 20ms
+key.3 = false
+wait 20ms
+key.3 = true
+wait 20ms
+key.2 = false
+wait 20ms
+key.6 = true
+wait 20ms
+key.3 = false
+wait 20ms
+key.6 = false
+}	
+if swallow(key.g) == true { // some kick spin macro
+key.2 = true
+wait 20ms
+key.1 = true
+wait 20ms
+key.2 = false
+wait 20ms
+key.8 = true
+wait 20ms
+key.1 = false
+wait 20ms
+key.8 = false
+} // /shoryuken
+if swallow(key.j) == true { // ultra combo macro
+key.2 = true
+wait 20ms
+key.3 = true
+wait 20ms
+key.2 = false
+wait 20ms
+key.3 = false
+wait 20ms
+key.2 = true
+wait 20ms
+key.3 = true
+wait 20ms
+key.2 = false
+wait 20ms
+key.3 = false
+wait 20ms
+key.8 = true
+wait 20ms
+key.8 = false
+wait 20ms
+key.8 = true
+wait 20ms
+key.8 = false
+wait 20ms
+key.8 = true
+wait 20ms
+key.8 = false
+}
+
+}//ryu
+
+

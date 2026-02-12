@@ -1,0 +1,142 @@
+﻿
+Wiimote.Leds = 1 + 8 /* No fancy LED animations here. :) */ 
+
+var.z = Wiimote.gz
+var.x = Wiimote.gx
+
+var.zn = nunchuck.gz
+var.xn = nunchuck.gx
+
+
+if var.x>.51
+   key.a = true
+endif
+if var.x<.47
+   key.a = false
+endif
+
+if -.5<var.z<.5
+   key.Left=false
+   key.Right=false
+endif
+if var.z<-.5
+   key.Left=true
+endif
+if var.z>.5
+   key.Right=true
+endif
+
+
+if -1<var.xn<0
+   key.Down = false
+   key.Up = false
+endif
+if var.xn<-1
+   key.down = true
+endif
+if var.xn>0
+   key.up = true
+endif
+
+key.z = nunchuck.Z
+key.space = wiimote.B
+key.r = nunchuck.C
+key.s = nunchuck.up
+key.x = nunchuck.Down
+key.w = wiimote.A
+key.c = wiimote.Minus
+key.esc = wiimote.Home
+key.f = wiimote.Plus
+
+
+
+//----------------------------------------------------------------------------- 
+
+// Rumble code 
+
+// Wiimote vibrates according to throttle level(wiimote.RawForceY).
+
+// If you dislike vibration, make var.RumbleMode false or erase the line.
+
+//----------------------------------------------------------------------------- 
+
+var.RumbleMode = true
+
+if var.RumbleMode = true then
+
+  if  wiimote.RawForceX <= 0 then
+
+    var.RumbleLevel = 0 
+
+  else if  (wiimote.RawForceX > 0) and (wiimote.RawForceX <= 5) then
+
+    var.RumbleLevel = 1 
+
+    wiimote.Rumble = true 
+
+    wait 20ms 
+
+    wiimote.Rumble = false
+
+    wait 100ms 
+
+  else if (wiimote.RawForceX > 5) and (wiimote.RawForceX <= 10) then
+
+    var.RumbleLevel = 2 
+
+    wiimote.Rumble = true 
+
+    wait 30ms 
+
+    wiimote.Rumble = false
+
+    wait 80ms 
+
+  else if (wiimote.RawForceX > 10) and (wiimote.RawForceX <= 15) then
+
+    var.RumbleLevel = 3 
+
+    wiimote.Rumble = true 
+
+    wait 40ms 
+
+    wiimote.Rumble = false
+
+    wait 60ms 
+
+  else if (wiimote.RawForceX > 15) and (wiimote.RawForceX <= 20) then
+
+    var.RumbleLevel = 4 
+
+    wiimote.Rumble = true 
+
+    wait 50ms 
+
+    wiimote.Rumble = false
+
+    wait 40ms 
+
+  else if (wiimote.RawForceX > 20) and (wiimote.RawForceX <= 25) then
+
+    var.RumbleLevel = 5 
+
+    wiimote.Rumble = true 
+
+    wait 60ms 
+
+    wiimote.Rumble = false
+
+    wait 20ms 
+
+  else if (wiimote.RawForceX > 25)
+
+    var.RumbleLevel = 6 
+
+    wiimote.Rumble = true 
+
+  endif 
+
+endif 
+
+
+debug = 'X: ' + Wiimote.gx + ' Z: ' + Wiimote.gz

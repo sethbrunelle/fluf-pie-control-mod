@@ -1,0 +1,38 @@
+﻿                                            wait 20ms //Short wait before getting 
+
+//initial Balance Board values
+
+//PPjoy.Analog1 = 0 //Resets the "pedals" at the beginning of the loop
+if !var.init 
+var.BBJy = BalanceBoard.Weight
+var.BBJL = BalanceBoard.Weightleft
+var.BBJR = BalanceBoard.Weightright
+var.init = True 
+EndIf 
+var.BBy = BalanceBoard.Weight - var.BBJy //Subtracts the initial values from the current 
+
+//values
+var.rbby = trunc(var.BBy)
+
+//var.rbby = var.BBy
+debug = "WEIGHT " + /*var.rbby +*/ trunc(var.rbby*2.20462)
+
+
+
+
+
+var.weight = BalanceBoard.Weight
+
+var.right = BalanceBoard.weightright - var.BBJR
+var.left = balanceboard.weightleft - var.BBJL
+
+var.ratioright = var.right / var.left
+var.ratioleft = var.left / var.right
+
+
+//if var.weight > 100 then var.jump = true
+var.change = delta (var.weight)
+//if var.change < 10 and > -10 then var.jump = 0
+//if var.change > 10 then var.jump = 1
+//if var.change < -10 then var.jump = -1
+

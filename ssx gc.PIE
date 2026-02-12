@@ -1,0 +1,116 @@
+﻿/*ssx control 1.2+
+
+!!now with documentation that requires 0 reading of impossibly simple code!!
+
+press 3 for ssx3
+press 4 for ssx on tour
+
+press s for skiing
+press b for snowboard (light left)
+
+hold b for spins/flips
+control stick is butter stick/c-stick when on bboard
+   and is normal joystick when not on bboard
+
+NOTE: must reposition body even over middle after b button release to reset control pad
+a bug caused by how the buttons are labelled pressed or not. (t/f)
+that turned out to work well with how the game is played (adds more realism/ challenge)
+when b button released, only can disable control pad (ignore this line if it doesnt make sense
+you'll see what I mean when you play the game)
+
+basically, press and hold b when setting up for a jump and in the air when spinning/flipping
+release b and balance your body when you want to even out for a landing.
+your character will complete the spin and return to riding position, allowing for safe landing
+after you have evened out, you can further fine tune your landing with your balance
+
+C button on nunchuck for tweaking/ speed burst and UBER
+
+*/
+
+var.jumpbutton = wiimote.b
+
+var.weight = BalanceBoard.Weight
+var.right = balanceboard.WeightFront/balanceboard.Weight
+var.left = balanceboard.WeightBack/balanceboard.Weight
+var.up = BalanceBoard.weightright/balanceboard.Weight
+var.down = balanceboard.weightleft/balanceboard.Weight
+
+//how do you wish to play?
+if key.s then var.skiboard = true
+if key.b then var.skiboard = false
+if key.3 then var.ssx3 = true
+if key.4 then var.ssx3 = false
+
+//ski
+if var.skiboard == true then {
+var.yaxis = var.right - var.left
+var.xaxis = var.up - var.down
+}
+
+//board
+if var.skiboard == false then {
+var.xaxis = var.right - var.left
+var.yaxis = var.down - var.up
+}
+
+if -.2<var.xaxis then var.jumpSpinleft = false
+if var.xaxis<.2 then var.jumpSpinright = false
+if var.yaxis<.2 then var.jumpFlipfront = false
+if -.2<var.yaxis then var.jumpFlipback = false
+
+ppjoy4.digital6 = var.jumpFlipfront
+ppjoy4.Digital7 = var.jumpFlipback
+ppjoy4.digital8 = var.jumpSpinleft
+ppjoy4.Digital9 = var.jumpSpinright
+
+PPJoy4.Digital0 = wiimote.A
+ppjoy4.Digital1 = wiimote.down or wiimote.Stabbing      //R trigger = method grab and right punch
+ppjoy4.Digital2 = nunchuck.C                            //b button = tweak
+ppjoy4.Digital3 = wiimote.Plus                          //start/pause
+ppjoy4.Digital4 = wiimote.One                           //X / handplant
+ppjoy4.Digital11 = wiimote.minus or nunchuck.Stabbing   //L trigger = stalefish and left punch
+
+//ssx4
+if var.ssx3 == false then {
+ppjoy4.Digital5 = nunchuck.z                   //y button = mute grab
+ppjoy4.digital10 = wiimote.Two                 //z button = reset
+}
+
+//ssx3
+if var.ssx3 == true then {
+ppjoy4.Digital5 = wiimote.Two                   //y button = reset
+ppjoy4.digital10 = nunchuck.z                   //z button = mute grab
+}
+
+if balanceboard.weight > 5 {                   //more than 5lbs enables bboard
+
+if var.jumpbutton == false {                   //this part changes weight controls between
+                                               //joystick and control pad (analog and digital)
+PPJoy4.Analog0 = 1.1*var.xaxis                 //for rider turning control
+PPJoy4.Analog1 = 1.4*var.yaxis                 //and tricks (b button pressed)
+ppjoy4.analog2 = nunchuck.JoyX                 //and sensitivity mulitpliers
+ppjoy4.analog3 = nunchuck.JoyY                 //<< which apply to both analog and digital
+}
+
+
+
+if var.jumpbutton == true {
+if var.xaxis<-.2 then var.jumpSpinleft = true
+if .2<var.xaxis then var.jumpSpinright = true
+if .2<var.yaxis then var.jumpFlipfront = true
+if var.yaxis<-.2 then var.jumpFlipback = true
+}
+if -.2<var.xaxis then var.jumpSpinleft = false
+if var.xaxis<.2 then var.jumpSpinright = false
+if var.yaxis<.2 then var.jumpFlipfront = false
+if -.2<var.yaxis then var.jumpFlipback = false
+
+
+}
+if balanceboard.weight < 5 {                   //joystick control when not standing on board
+PPJoy4.Analog0 = nunchuck.Joyx
+PPJoy4.Analog1 = -nunchuck.Joyy
+
+
+}
+

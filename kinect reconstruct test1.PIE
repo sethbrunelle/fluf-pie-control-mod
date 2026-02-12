@@ -1,0 +1,28 @@
+﻿
+
+//Say "enable voice commands" to begin.
+if said("enable voice commands") or said("listen",5) or said("begin listening") then
+   var.listen=true
+   say("voice commands enabled")
+end if
+
+if said("disable voice commands") or said("don't listen",5) or said("stop listening") then
+   var.listen=false
+   say("voice commands disabled")
+end if
+
+if var.listen ==true then
+
+//general
+key.p = said("start") or said("pause")
+key.Escape = said("stop")
+key.r = said("reset")
+key.y = said("yes")
+key.n = said("no")
+key.enter = said("enter")
+
+
+
+end if
+
+

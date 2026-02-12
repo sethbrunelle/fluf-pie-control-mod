@@ -1,0 +1,152 @@
+﻿/*
+    WiiMotion Plus Mouse                                  v 2010.01.14
+    by lednerg
+
+    Emulates the basic functionality of a Gyration Air Mouse.
+    Requires GlovePIE version .42 or higher.
+
+    Leave the Wiimote on your desk when starting so it can calibrate.
+    Hold B to move, A = Left-Click, + = Right-Click, Down = Middle-Click.
+*/
+
+
+
+var.MoveButton = wiimote.B
+mouse.LeftButton = wiimote.A
+mouse.RightButton = wiimote.minus
+mouse.MiddleButton = wiimote.plus
+keyboard.space = wiimote.One
+mouse.wheeldown = wiimote.left
+mouse.wheelup = wiimote.right
+esc = wiimote.home
+key.v = wiimote.Two
+
+//zoom in and out cntrl+scroll pressing wiimote.Down
+
+var.ZoomButton = wiimote.down
+
+/*var.movex = roundto(wiimote.relaccx,-2)
+var.movey = roundto(wiimote.relaccy,-2)
+var.movez = roundto(wiimote.relaccz,-2)
+var.vectormove = roundto(sqrt(sqr(wiimote.relaccx)+sqr(wiimote.relaccy)+sqr(wiimote.relaccz)),-2)
+*
+
+var.jerkx = smooth(delta(wiimote.rawaccx),20)
+var.jerky = delta(wiimote.rawaccy)                  // try using DeadZone(x,a) function
+var.jerkz = delta(wiimote.rawaccz)
+var.jerk = 2*(sqrt(sqr(delta(wiimote.rawaccx))+sqr(delta(wiimote.rawaccy))+sqr(delta(wiimote.rawaccz))))
+
+if .6<var.jerk<1 {
+   var.CONSTANTUPDOWN = TRUE
+else
+    var.CONSTANTUPDOWN = FALSE
+    }
+
+var.yaw = int(wiimote.yaw)
+var.pitch = int(wiimote.pitch)
+var.roll = int(wiimote.roll)
+if key.s == true {
+   var.s = true
+   }
+if key.d == true {
+   var.s = false
+   }
+if var.s == false {
+   var.position = 0
+else
+var.position = var.position + 3*abs(int(var.jerk))^(1/3)*.004 // final integer approximates 1 meter
+}     */
+
+var.pulljerkz = smooth(Deadzone(delta(wiimote.rawaccz),.2),10)
+if var.pulljerkz<0 {
+   var.zoomspeedz = -(1/2)*abs(var.pulljerkz)^(2)
+elseif var.pulljerkz>0
+   var.zoomspeedz = (1/2)*var.pulljerkz^(2)
+else
+    var.zoomspeedz = 0
+}
+var.pulljerky = smooth(Deadzone(delta(wiimote.rawaccy),.2),10)
+if var.pulljerky<0 {
+   var.zoomspeedy = -(1/2)*abs(var.pulljerky)^(2)
+elseif var.pulljerky>0
+   var.zoomspeedy = (1/2)*var.pulljerky^(2)
+else
+    var.zoomspeedy = 0
+}
+if (var.zoomspeedy + var.zoomspeedz)<0 {
+   var.zoomspeed = -sqrt(abs(var.zoomspeedy^2 - var.zoomspeedz^2))
+else if (var.zoomspeedy + var.zoomspeedz)>0 {
+   var.zoomspeed = sqrt(var.zoomspeedy^2 + var.zoomspeedz^2)
+else
+    var.zoomspeed = 0
+       }
+   /*
+if wiimote.relaccz<0 {
+   var.zoomspeed = -.5*abs(wiimote.relaccz)^(2)
+elseif wiimote.relaccz>0
+   var.zoomspeed = .5*wiimote.relaccz^(2)
+else
+    var.zoomspeed = 0
+}  */
+
+if var.zoombutton == true {
+   var.zooms = var.zooms + -200*var.zoomspeed
+   mouse.DirectInputZ = var.zooms
+}
+
+
+
+
+var.Speed = 75   // 0 to 100
+
+PIE.FrameRate = 240hz
+if wiimote.HasMotionPlus = false then debug = "WiiMotion Plus NOT DETECTED!"
+if wiimote.HasMotionPlus = true and var.MoveButton = true {
+   var.YawSpeed = wiimote.MotionPlus.YawSpeed
+   var.PitchSpeed = wiimote.MotionPlus.PitchSpeed
+   var.rollspeed = wiimote.motionplus.rollspeed
+   if SameValue( Smooth(wiimote.SmoothRoll, 10), wiimote.SmoothRoll, 10) then var.Roll = Smooth(wiimote.SmoothRoll, 10) else var.Roll = wiimote.SmoothRoll
+   if var.Roll < 0 and var.Roll >= -90 {
+      var.XYswap = 1 - EnsureMapRange(var.Roll, -90, 0, 0, 1)
+      var.RightDown = -1
+      var.TopUp = 1
+   }
+   if var.Roll <= 90 and var.Roll >= 0 {
+      var.XYswap = 1 - EnsureMapRange(var.Roll, 90, 0, 0, 1)
+      var.RightDown = 1
+      var.TopUp = 1
+   }
+   if var.Roll > 90 and var.Roll <= 180 {
+      var.XYswap = 1 - EnsureMapRange(var.Roll, 90, 180, 0, 1)
+      var.RightDown = 1
+      var.TopUp = -1
+   }
+   if var.Roll < -90 and var.Roll >= -180 {
+      var.XYswap = 1 - EnsureMapRange(var.Roll, -90, -180, 0, 1)
+      var.RightDown = -1
+      var.TopUp = -1
+   }
+   var.SpeedX = var.TopUp * var.YawSpeed - ( var.TopUp * var.YawSpeed * var.XYswap ) + ( var.RightDown * var.PitchSpeed * var.XYswap )
+   var.SpeedY = var.TopUp * var.PitchSpeed - ( var.TopUp * var.PitchSpeed * var.XYswap) + ( -var.RightDown * var.YawSpeed * var.XYswap )
+   mouse.DirectInputX = int(var.MouseX)
+   mouse.DirectInputY = int(var.MouseY)
+   var.MouseX = var.MouseX + ( var.SpeedX / (10500000 - EnsureMapRange(var.Speed, 0, 100, 0, 10000000) ) )
+   var.MouseY = var.MouseY - ( var.SpeedY / (10500000 - EnsureMapRange(var.Speed, 0, 100, 0, 10000000) ) )
+/* // for mouse.x and mouse.y instead
+   mouse.x = var.MouseX
+   mouse.y = var.MouseY
+   var.MouseX = var.MouseX + ( var.SpeedX / (20500 - EnsureMapRange(var.Speed, 0, 100, 0, 20000) ) )
+   var.MouseY = var.MouseY - ( var.SpeedY / (20500 - EnsureMapRange(var.Speed, 0, 100, 0, 20000) ) )
+*/
+}
+if var.MoveButton = false {
+   var.MouseX = mouse.DirectInputX
+   var.MouseY = mouse.DirectInputY
+}
+
+/* // for mouse.x and mouse.y instead
+   var.MouseX = mouse.x
+   var.MouseY = mouse.y
+*/
+}
+

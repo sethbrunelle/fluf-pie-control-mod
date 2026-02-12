@@ -1,0 +1,368 @@
+﻿/*ssx control 1.6+
+============================================================================
+...........SSS
+...SSS....SS SS........./XX
+..SS.SS..SSS..S......../XX
+.SSS..S...SS....XXX.../XX
+..SS.......SS....XXX./XX
+...SS.......SS....XXXXX
+....SS.......SS....XXX
+.....SS...S..SSS...XXXX
+..S..SSS..SS.SS...XX/XXX
+..SS.SS....SSS...XX/..XXX
+...SSS..........XX/....XXX
+...............XX/
+===================================
+press key.s for skiing
+press key.b for snowboard (light left)
+
+press key.3 for ssx3
+press key.4 for ssx4(ontour)
+
+ press key.r for normaljoy controls with leanback stop, lean control in menus
+*press key.f for forward preference, get off board to control menus
+
+*NOTE: you WILL experience bugs if you don't choose all three. order doesnt matter
+ex: I press 3,b,r after starting script.
+---------------------------------------------------------------------
+
+press wiimote.Two to calibrate weight when on board
+
+hold wiimote.B for grabs (grabs change depending on wiimote yaw)
+hold wiimote.A before jump to lock in (optional), swing arms, release a to jump,
+               then press a again to stabilize before landing
+*NOTE: releasing A does not lock grabs or uber, only flips and lean
+      meaning to hold a specific grab, hold arm in one place ******************
+
+home, plus, minus = start, a b
+dpad = dpad
+
+hold wiimote upside down for butters/presses (buttons facing floor)
+
+press wiimote.one to reset position
+
+push down hard (fake jump) to jump. its natural.
+swing arms to spin/flip
+shake wiimote to recover from bail
+
+HAVE FUN
+
+to add: LED fun
+*/
+
+
+var.weight = BalanceBoard.Weight
+var.right = balanceboard.WeightFront/balanceboard.Weight
+var.left = balanceboard.WeightBack/balanceboard.Weight
+var.up = BalanceBoard.weightright/balanceboard.Weight
+var.down = balanceboard.weightleft/balanceboard.Weight
+
+//how do you wish to play?
+if key.s then var.skiboard = true
+if key.b then var.skiboard = false
+if key.3 then var.ssx3 = true
+if key.4 then var.ssx3 = false
+
+//ski
+if var.skiboard == true then {
+var.yaxis = var.right - var.left
+var.xaxis = var.up - var.down
+}
+
+//board
+if var.skiboard == false then {
+var.xaxis = var.right - var.left
+var.yaxis = var.down - var.up
+}
+
+    //shakyyyyy? here
+if wiimote.Shakiness>20 {
+   var.shake = true
+   wait 100ms
+   var.shake = false
+   wait 100ms
+   else
+   var.shake = false
+   }
+
+//news
+
+var.grabbutton = wiimote.B
+var.jumpbutton =  wiimote.a          //modifier hold key
+if key.f {
+var.stopbutton = true
+}
+if key.r {
+var.stopbutton = false
+}
+
+//=================/ allow for weight <5? what are downsides? battery life?==========================
+if var.weight > 5 {
+   var.YawSpeed = wiimote.MotionPlus.YawSpeed
+   var.PitchSpeed = wiimote.MotionPlus.PitchSpeed
+   if SameValue( Smooth(wiimote.SmoothRoll, 10), wiimote.SmoothRoll, 10) then var.Roll = Smooth(wiimote.SmoothRoll, 10) else var.Roll = wiimote.SmoothRoll
+   if var.Roll < 0 and var.Roll >= -90 {
+      var.XYswap = 1 - EnsureMapRange(var.Roll, -90, 0, 0, 1)
+      var.RightDown = -1
+      var.TopUp = 1
+   }
+   if var.Roll <= 90 and var.Roll >= 0 {
+      var.XYswap = 1 - EnsureMapRange(var.Roll, 90, 0, 0, 1)
+      var.RightDown = 1
+      var.TopUp = 1
+   }
+   if var.Roll > 90 and var.Roll <= 180 {
+      var.XYswap = 1 - EnsureMapRange(var.Roll, 90, 180, 0, 1)
+      var.RightDown = 1
+      var.TopUp = -1
+   }
+   if var.Roll < -90 and var.Roll >= -180 {
+      var.XYswap = 1 - EnsureMapRange(var.Roll, -90, -180, 0, 1)
+      var.RightDown = -1
+      var.TopUp = -1
+   }
+   var.SpeedX = var.TopUp * var.YawSpeed - ( var.TopUp * var.YawSpeed * var.XYswap ) + ( var.RightDown * var.PitchSpeed * var.XYswap )
+   var.SpeedY = var.TopUp * var.PitchSpeed - ( var.TopUp * var.PitchSpeed * var.XYswap) + ( -var.RightDown * var.YawSpeed * var.XYswap )
+}
+//--------------------------------------------------------------------------
+
+
+
+
+  //oh yeahhhh
+
+if wiimote.two {
+var.calibjump = var.weight+var.weight/2.7              //calibtration
+var.calibair = var.weight/3.5
+}
+var.smoothjump = smooth(var.weight,30)+var.calibair
+
+//spin test
+
+var.speedspin = var.speedx
+if var.speedspin > 280 {
+   var.rightspin = true
+   else
+   var.rightspin = false
+   }
+if var.speedspin < -280 {
+   var.leftspin = true
+   else
+   var.leftspin = false
+   }
+var.flipspeed = var.speedy
+if var.flipspeed > 500 {
+   var.backflip = true
+   else
+   var.backflip = false
+   }
+if var.flipspeed < -500 {
+   var.frontflip = true
+   else
+   var.frontflip = false
+   }
+
+//jumping
+
+
+if var.weight>5 and var.calibjump>5{
+if var.weight>var.calibjump or var.weight>var.smoothjump  {
+   var.jump = true
+else
+   var.jump = false
+}
+}
+
+//actual output for spinning
+
+if var.leftspin==true and var.jumpbutton==true {
+   var.lefty = true
+}
+if var.leftspin==false and var.jumpbutton==true {
+   var.lefty = false
+}
+if var.rightspin==true and var.jumpbutton==true {
+   var.righty = true
+}
+if var.rightspin==false and var.jumpbutton==true {
+   var.righty = false
+}
+if var.backflip==true and var.jumpbutton==true {
+   var.backy = true
+}
+if var.backflip==false and var.jumpbutton==true {
+   var.backy = false
+}
+if var.frontflip==true and var.jumpbutton==true {
+   var.fronty = true
+}
+if var.frontflip==false and var.jumpbutton==true {
+   var.fronty = false
+}
+
+if var.weight>5 {
+var.jumpSpinleft = var.leftspin or var.lefty
+var.jumpSpinright = var.rightspin or var.righty
+var.jumpFlipfront = var.frontflip or var.fronty
+var.jumpFlipback = var.backflip or var.backy
+}
+
+//grabs
+if var.weight>5{
+if 0<=wiimote.yaw<60 then var.grab = 1
+if 60<=wiimote.yaw<120 then var.grab = 2
+if 120<=wiimote.yaw<180 then var.grab = 3
+if -180<=wiimote.yaw<-120 then var.grab = 4
+if -120<=wiimote.yaw<-60 then var.grab = 5
+if -60<=wiimote.yaw<0 then var.grab = 6
+}
+
+if var.grabbutton==true{
+   if var.grab==1
+   var.Rtest=true
+   var.Ltest=false
+   var.Ztest=false
+   elseif var.grab==2
+   var.Rtest = true
+   var.Ltest = false
+   var.Ztest = false
+   elseif var.grab==3
+   var.Rtest=false
+   var.Ltest=false
+   var.Ztest=true
+   elseif var.grab==4
+   var.Rtest=true
+   var.Ltest=true
+   var.Ztest=false
+   elseif var.grab==5
+   var.Rtest=true
+   var.Ltest=false
+   var.Ztest=true
+   elseif var.grab==6
+   var.Rtest=false
+   var.Ltest=true
+   var.Ztest=true
+   endif
+}
+if var.grabbutton==true{   
+   ppjoy2.Digital4 = wiimote.home
+}
+if var.grabbutton==false {
+   var.Rtest = false
+   var.Ltest = false
+   var.Ztest = false
+}
+
+if wiimote.roll>130 or wiimote.roll<-130 {
+   var.butterbutton = true
+   else
+   var.butterbutton = false
+}
+//output
+
+
+if balanceboard.weight > 5 {                   //more than 5lbs enables bboard
+if var.butterbutton == false and var.jumpbutton==false{
+if var.stopbutton = false{
+PPJoy2.Analog1 = 1.2*var.yaxis
+}
+if var.stopbutton = true{                             //testing nostop leanback?
+if var.yaxis>0 {
+PPJoy2.Analog1 = ensuremaprange(var.yaxis,-.1,.45,0,1)
+}
+if var.yaxis<0 {
+PPJoy2.Analog1 = ensuremaprange(var.yaxis,-1,-.1,-1,0)
+}
+}
+PPJoy2.Analog0 = 1.0*var.xaxis
+PPJoy2.analog2 = 0
+PPJoy2.analog3 = 0
+}
+if var.butterbutton == true and var.jumpbutton==false{
+PPJoy2.analog2 = 2*var.xaxis
+PPJoy2.analog3 = 2*var.yaxis
+PPJoy2.analog0 = 0
+PPJoy2.analog1 = 0
+}
+
+if -.33<var.xaxis then var.jumpSpinleft2 = false
+if var.xaxis<.33 then var.jumpSpinright2 = false
+if var.yaxis<.22 then var.jumpFlipfront2 = false
+if -.22<var.yaxis then var.jumpFlipback2 = false
+if var.jumpbutton==true{
+PPJoy2.analog2 = 0
+PPJoy2.analog3 = 0
+PPJoy2.Analog0 = 0
+PPJoy2.Analog1 = 0
+if var.xaxis<-.33 then var.jumpSpinleft2 = true
+if .33<var.xaxis then var.jumpSpinright2 = true
+if .22<var.yaxis then var.jumpFlipfront2 = true
+if var.yaxis<-.22 then var.jumpFlipback2 = true
+}
+}
+
+PPJoy2.digital6 = var.jumpFlipfront or var.jumpFlipfront2 or wiimote.Up
+PPJoy2.Digital7 = var.jumpFlipback or var.jumpFlipback or wiimote.down
+PPJoy2.digital8 = var.jumpSpinleft or var.jumpSpinleft2 or wiimote.left
+PPJoy2.Digital9 = var.jumpSpinright or var.jumpSpinright2 or wiimote.Right
+
+PPJoy2.digital1 = var.Rtest                             // R trigger/button
+PPJoy2.digital11 = var.Ltest                            // L button
+PPJoy2.digital10 = var.Ztest                           //  Z buton
+PPJoy2.digital0 + PPJoy2.digital2 = var.jump          //a and b button for jump
+PPJoy2.digital0 + PPJoy2.digital2 = wiimote.A          //a and b button for jump
+PPJoy2.digital0 = wiimote.Plus                        //a button
+
+PPJoy2.Digital2 = var.Shake or wiimote.Minus          //b button = tweak
+if var.grabbutton == false {
+   PPJoy2.Digital3 = wiimote.home                          //start/pause
+}
+PPJoy2.Digital5 = wiimote.one                           //y reset
+
+//ssx3
+if var.ssx3 == true then {
+PPJoy2.Digital5 = wiimote.one                   //y button = reset
+PPJoy2.digital10 = var.Ztest                   //z button = mute grab
+}
+
+//ssx4
+if var.ssx3 == false then {
+PPJoy2.Digital5 = var.Ztest                   //y button = mute grab
+PPJoy2.digital10 = wiimote.one                 //z button = reset
+}
+
+
+
+
+
+
+
+
+
+if balanceboard.weight < 5 {                   //possibly unnecessary, test it why dontyou
+var.jumpSpinleft = false
+var.jumpSpinright = false
+var.jumpFlipfront = false
+var.jumpFlipback = false
+var.jumpSpinleft2 = false
+var.jumpSpinright2 = false
+var.jumpFlipfront2 = false
+var.jumpFlipback2 = false
+var.jump = false
+PPJoy2.analog0 = 0
+PPJoy2.analog1 = 0
+PPJoy2.analog2 = 0
+PPJoy2.analog3 = 0
+}
+
+
+/*
+var.rumble = swallow(key.R)
+wiimote.Rumble = var.rumble
+
+//experimental
+                                 /*
+var.wtf = wiimote.UpsidedownOnShoulder
+var.watch = wiimote.LookingAtrightWatch or wiimote.LookingAtWatch
+
+wiimote.rumble = key.CapsLock     */

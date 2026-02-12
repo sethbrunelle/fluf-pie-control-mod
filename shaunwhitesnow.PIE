@@ -1,0 +1,23 @@
+﻿
+var.weight = BalanceBoard.Weight
+var.right = balanceboard.WeightFront/balanceboard.Weight
+var.left = balanceboard.WeightBack/balanceboard.Weight
+var.up = BalanceBoard.weightright/balanceboard.Weight
+var.down = balanceboard.weightleft/balanceboard.Weight
+
+
+var.xaxis = var.right - var.left
+var.yaxis = var.down - var.up
+
+
+var.tweakbutton = wiimote.B
+var.jumpbutton =  wiimote.a
+var.butterbutton = wiimote.Plus
+
+
+if balanceboard.weight > 5 {                   //more than 5lbs enables bboard
+PPJoy1.Analog0 = 1.1*var.xaxis
+PPJoy1.Analog1 = ensuremaprange(var.yaxis,-.7,.7,-1,1)
+
+}
+

@@ -1,0 +1,138 @@
+﻿If pressed(wiimote.one)
+   toggle(var.Steer)
+ElseIf pressed(Wiimote.two)
+       toggle(var.Steer)
+EndIf
+
+//Blink rate
+var.Blink = 100ms
+
+If Var.Steer = False
+//Menu navigation
+Wiimote.Leds = 1
+wait var.Blink
+Wiimote.Leds = 3
+wait var.Blink
+Wiimote.Leds = 7
+wait var.Blink
+Wiimote.Leds = 15
+wait var.Blink
+   Up = Wiimote.Right
+   Down = Wiimote.Left
+   Left = Wiimote.Up
+   Right = Wiimote.Down
+
+ElseIf Var.Steer = True
+PPJoy.Analog0 = maprange(Wiimote.steeringangle,-355,355,-1,1) //Steering controls
+
+var.rymin = 4 // 1. Stand remote on IR end. Put the number next to RawZ here.
+var.rymax = 6 // 2. Stand remote on expansion port. Put the number next to RawZ here.
+
+var.rxmin = 6 // 3. Lay remote on right side. Put the number next to RawX here.
+var.rxmax = 9 // 4. Lay remote on left side.   Put the number next to RawX here.
+
+/*   ---------------------(Step 3 - Center Axes) ----------------------- 
+  |   1. In GlovePIE, go to CP-Settings > Joystick.                   | 
+  |   2. Select "PPJoy Virtual Joystick 1" and click Properties.       | 
+  |   3. Lay your remote on a flat surface with the buttons facing up.| 
+  |   4. Change the following values to center the axes.           | 
+    ------------------------------------------------------------------- */ 
+
+var.ryoffset = 0 // This is shown as the X axis.
+var.rxoffset = 0 // This is shown as the Y axis.
+
+var.ry = BalanceBoard.WeightLeft
+var.rx = BalanceBoard.WeightRight
+
+
+var.ry = var.ry + var.ryoffset
+var.rx = var.rx + var.rxoffset 
+
+ppjoy.analog3 = MapRange(var.ry, var.rymin, var.rymax, -1, 1)
+ppjoy.analog4 = MapRange(var.rx, var.rxmin, var.rxmax, -1, 1)
+
+if ppjoy.analog3 < 0 then ppjoy.analog3 = 0
+if ppjoy.analog4 < 0 then ppjoy.analog4 = 0
+
+
+
+ppjoy.digital1 = Wiimote.A 
+ppjoy.digital2 = Wiimote.B 
+ppjoy.digital3 = Wiimote.Home 
+ppjoy.digital4 = Wiimote.Plus
+ppjoy.digital5 = Wiimote.Minus
+ppjoy.digital6 = Wiimote.Up
+ppjoy.digital7 = Wiimote.Down
+ppjoy.digital8 = Wiimote.Left
+ppjoy.digital9 = Wiimote.Right
+
+var.ymin = -9 // 1. Stand remote on IR end. Put the number next to RawZ here.
+var.ymax = 26 // 2. Stand remote on expansion port. Put the number next to RawZ here.
+
+// 3. Lay remote on right side. Put the number next to RawX here.
+ // 4. Lay remote on left side.   Put the number next to RawX here.
+
+/*   ---------------------(Step 3 - Center Axes) ----------------------- 
+  |   1. In GlovePIE, go to CP-Settings > Joystick.                   | 
+  |   2. Select "PPJoy Virtual Joystick 1" and click Properties.       | 
+  |   3. Lay your remote on a flat surface with the buttons facing up.| 
+  |   4. Change the following values to center the axes.           | 
+    ------------------------------------------------------------------- */ 
+
+var.yoffset = 0 // This is shown as the X axis.
+
+
+var.y = Wiimote.RawForceY
+
+
+
+
+var.y = var.y + var.yoffset
+
+
+ppjoy.analog1 = MapRange(var.y, var.ymin, var.ymax, -1, 1)
+
+
+if (!var.init)
+   Wiimote.Leds = 0
+   PPJoy1.Analog2 = 0
+   var.init = true
+endif
+
+if (Key.console)
+   Wiimote.Leds = 0
+   PPJoy1.Analog2 = 0
+   Wait 200ms
+endif
+
+if (Key.one)
+   Wiimote.Leds = 1
+      PPJoy1.Analog2 = 0.25
+   Wait 200ms
+endif
+
+if (Key.two)
+   Wiimote.Leds = 1 + 2
+      PPJoy1.Analog2 = 0.50
+   Wait 200ms
+endif
+
+if (Key.three)
+   Wiimote.Leds = 1 + 2 + 4
+      PPJoy1.Analog2 = 0.75
+   Wait 200ms
+endif
+
+if (Key.four)
+   Wiimote.Leds = 1 + 2 + 4 + 8
+      PPJoy1.Analog2 = 1
+   Wait 200ms
+endif
+
+endif
+
+
+debug = 'RawX: ' + PPjoy.Analog0 + ' RawY: ' + Wiimote.RawForceY + "Thr: " + 
+
+PPjoy.Analog2 + "L: " + ppjoy.analog3 + "R: " + ppjoy.analog4
+

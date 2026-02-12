@@ -1,0 +1,131 @@
+﻿var.zmin = -29 // 1. Stand remote on IR end. Put the number next to RawZ here.
+var.zmax = 25 // 2. Stand remote on expansion port. Put the number next to RawZ here.
+
+var.xmin = -30 // 3. Lay remote on right side. Put the number next to RawX here.
+var.xmax = 24 // 4. Lay remote on left side.   Put the number next to RawX here.
+
+/*   ---------------------(Step 3 - Center Axes) ----------------------- 
+  |   1. In GlovePIE, go to CP-Settings > Joystick.                   | 
+  |   2. Select "PPJoy Virtual Joystick 1" and click Properties.       | 
+  |   3. Lay your remote on a flat surface with the buttons facing up.| 
+  |   4. Change the following values to center the axes.           | 
+    ------------------------------------------------------------------- */ 
+
+var.zoffset = -1 // This is shown as the X axis.
+var.xoffset = -6 // This is shown as the Y axis.
+
+var.z = Wiimote.RawForceZ 
+var.x = Wiimote.RawForceX 
+
+Wiimote.Leds = 1 + 8 /* No fancy LED animations here. :) */ 
+
+var.z = var.z + var.zoffset 
+var.x = var.x + var.xoffset 
+
+ppjoy.analog0 = MapRange(var.z, var.zmin, var.zmax, -1, 1) 
+ppjoy.analog1 = MapRange(var.x, var.xmin, var.xmax, -1, 1) 
+
+ppjoy.digital1 = Wiimote.A 
+ppjoy.digital2 = Wiimote.B 
+ppjoy.digital3 = Wiimote.Home 
+ppjoy.digital4 = Wiimote.Plus 
+ppjoy.digital5 = Wiimote.Minus 
+ppjoy.digital6 = Wiimote.Up 
+ppjoy.digital7 = Wiimote.Down 
+ppjoy.digital8 = Wiimote.Left 
+ppjoy.digital9 = Wiimote.Right 
+ppjoy.digital10 = Wiimote.One 
+ppjoy.digital11 = Wiimote.Two 
+
+//----------------------------------------------------------------------------- 
+
+// Rumble code 
+
+// Wiimote vibrates according to throttle level(wiimote.RawForceY).
+
+// If you dislike vibration, make var.RumbleMode false or erase the line.
+
+//----------------------------------------------------------------------------- 
+
+var.RumbleMode = true
+
+
+
+if var.RumbleMode = true then
+
+  if  wiimote.RawForceX <= 0 then
+
+    var.RumbleLevel = 0 
+
+  else if  (wiimote.RawForceX > 0) and (wiimote.RawForceX <= 5) then
+
+    var.RumbleLevel = 1 
+
+    wiimote.Rumble = true 
+
+    wait 20ms 
+
+    wiimote.Rumble = false
+
+    wait 100ms 
+
+  else if (wiimote.RawForceX > 5) and (wiimote.RawForceX <= 10) then
+
+    var.RumbleLevel = 2 
+
+    wiimote.Rumble = true 
+
+    wait 30ms 
+
+    wiimote.Rumble = false
+
+    wait 80ms 
+
+  else if (wiimote.RawForceX > 10) and (wiimote.RawForceX <= 15) then
+
+    var.RumbleLevel = 3 
+
+    wiimote.Rumble = true 
+
+    wait 40ms 
+
+    wiimote.Rumble = false
+
+    wait 60ms 
+
+  else if (wiimote.RawForceX > 15) and (wiimote.RawForceX <= 20) then
+
+    var.RumbleLevel = 4 
+
+    wiimote.Rumble = true 
+
+    wait 50ms 
+
+    wiimote.Rumble = false
+
+    wait 40ms 
+
+  else if (wiimote.RawForceX > 20) and (wiimote.RawForceX <= 25) then
+
+    var.RumbleLevel = 5 
+
+    wiimote.Rumble = true 
+
+    wait 60ms 
+
+    wiimote.Rumble = false
+
+    wait 20ms 
+
+  else if (wiimote.RawForceX > 25)
+
+    var.RumbleLevel = 6 
+
+    wiimote.Rumble = true 
+
+  endif 
+
+endif 
+
+
+debug = 'RawX: ' + Wiimote.RawForceX + ' RawZ: ' + Wiimote.RawForceZ  

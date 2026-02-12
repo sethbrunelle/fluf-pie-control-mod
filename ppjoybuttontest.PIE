@@ -1,0 +1,31 @@
+﻿ppjoy4.Digital0 = swallow(key.0)
+ppjoy4.Digital1 = swallow(key.1)
+ppjoy4.Digital2 = swallow(key.2)
+ppjoy4.Digital3 = swallow(key.3)
+ppjoy4.Digital4 = swallow(key.4)
+ppjoy4.Digital5 = swallow(key.5)
+ppjoy4.Digital6 = swallow(key.6)
+ppjoy4.Digital7 = swallow(key.7)
+ppjoy4.Digital8 = swallow(key.8)
+ppjoy4.Digital9 = swallow(key.9)
+ppjoy4.Digital10 = swallow(key.minus)
+ppjoy4.Digital11 = swallow(key.NUMPAD1)
+ppjoy4.Digital12 = swallow(key.numpad2)
+ppjoy4.Digital13 = swallow(key.numpad3)
+ppjoy4.Digital14 = swallow(key.numpad4)
+ppjoy4.Digital15 = swallow(key.numpad5)
+ppjoy4.Digital16 = swallow(key.numpad6)
+ppjoy4.Digital17 = swallow(key.numpad7)
+ppjoy4.Digital18 = swallow(key.numpad8)    
+ppjoy4.Digital19 = swallow(key.numpad9)
+
+ppjoy4.Analog0 = swallow(xinput.Joy1X)
+ppjoy4.Analog1 = swallow(xinput.Joy1Y)
+
+ppjoy4.Analog2 = xinput.Joy2X
+ppjoy4.Analog3 = xinput.Joy2Y
+
+ppjoy4.Analog4 = swallow(xinput.LeftTrigger)
+ppjoy4.Analog5 = swallow(xinput.RightTrigger)
+
+

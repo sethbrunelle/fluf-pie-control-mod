@@ -1,0 +1,52 @@
+﻿
+// if wiimote.B == true {
+   //var.LeftButton = wiimote.A
+PIE.FrameRate = 120hz
+
+var.pitch = 500-150*wiimote.gz
+var.yes = wiimote.gz
+var.cursorx = mouse.CursorPosX
+var.cursorY = mouse.CursorPosY
+
+
+if wiimote.B == true {
+   mouse.CursorPosX = -600
+
+   if wiimote.A == true {
+      var.click = true
+      mouse.CursorPosY = var.Pitch
+   }
+   if wiimote.A == false {
+      var.click = false
+      if wiimote.Two == true {
+         if var.yes < -1.6 {
+            var.click = true
+         }
+         if var.yes >= -1.6 {
+            var.click = false
+         }
+      }
+      if wiimote.Two == false {
+          if var.yes < -4 {
+            var.click = true
+          }
+          if var.yes >= -4 {
+            var.click = false
+          }
+      }
+   }
+}
+if wiimote.B == false {
+   var.click = false
+   //var.leftbutton = false
+}
+
+mouse.LeftButton = var.click
+var.yes = wiimote.gz
+
+  // }
+//if wiimote.B == false {
+   //var.LeftButton = wiimote.A
+ //  var.LeftButton = true
+  // }
+

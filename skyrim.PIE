@@ -1,0 +1,166 @@
+﻿/*
+
+#SKYRIM# CONTROL V0.1
+
+COMBINATION OF FPS CONTROLS WITH VOICE COMMANDS FOR SQUAD AND POWERS
+
+Hold like a gun, using Nunchuk Z button to shoot, and Holding the B button to aim
+I'll make a picture for controls    later
+
+note: tempermental: if nunchuk is plugged in, motionplus sometimes decides to not work.
+
+start script with all wiimotes connected to ensure correct mapping, then disconnect at will
+
+MOUSE CONTROL by lednerd
+*/
+var.MoveButton = wiimote.B
+
+//Movement
+keyboard.w = Nunchuk.Up
+keyboard.a = Nunchuk.Left
+keyboard.d = Nunchuk.Right
+keyboard.s = Nunchuk.Down
+keyboard.LeftAlt = nunchuk.C  //sprint
+keyboard.space = wiimote.Minus              //jump
+keyboard.LeftControl = wiimote.Plus            //crouch
+
+//general action
+keyboard.e = wiimote.one                    //interact
+mouse.wheeldown = wiimote.right                   //zoom in
+mouse.WheelUp = wiimote.left                   //zoom out
+mouse.LeftButton = Nunchuk.Z or wiimote.stabbing                //shoot left click
+mouse.RightButton = wiimote.A or nunchuck.Stabbing               //zoom  right click
+keyboard.z = wiimote.Down                   //power
+keyboard.q = wiimote.up                     //favorites
+keyboard.tab = wiimote.home                   //menu
+keyboard.r = wiimote.Two                    //sheath
+
+
+//aiming
+var.Speed = 75   // 0 to 100
+
+PIE.FrameRate = 120hz
+if wiimote.HasMotionPlus = false then debug = "WiiMotion Plus NOT DETECTED!"
+if wiimote.HasMotionPlus = true and var.MoveButton = true {
+   var.YawSpeed = wiimote.MotionPlus.YawSpeed
+   var.PitchSpeed = wiimote.MotionPlus.PitchSpeed
+   if SameValue( Smooth(wiimote.SmoothRoll, 10), wiimote.SmoothRoll, 10) then var.Roll = Smooth(wiimote.SmoothRoll, 10) else var.Roll = wiimote.SmoothRoll
+   if var.Roll < 0 and var.Roll >= -90 {
+      var.XYswap = 1 - EnsureMapRange(var.Roll, -90, 0, 0, 1)
+      var.RightDown = -1
+      var.TopUp = 1
+   }
+   if var.Roll <= 90 and var.Roll >= 0 {
+      var.XYswap = 1 - EnsureMapRange(var.Roll, 90, 0, 0, 1)
+      var.RightDown = 1
+      var.TopUp = 1
+   }
+   if var.Roll > 90 and var.Roll <= 180 {
+      var.XYswap = 1 - EnsureMapRange(var.Roll, 90, 180, 0, 1)
+      var.RightDown = 1
+      var.TopUp = -1
+   }
+   if var.Roll < -90 and var.Roll >= -180 {
+      var.XYswap = 1 - EnsureMapRange(var.Roll, -90, -180, 0, 1)
+      var.RightDown = -1
+      var.TopUp = -1
+   }
+   var.SpeedX = var.TopUp * var.YawSpeed - ( var.TopUp * var.YawSpeed * var.XYswap ) + ( var.RightDown * var.PitchSpeed * var.XYswap )
+   var.SpeedY = var.TopUp * var.PitchSpeed - ( var.TopUp * var.PitchSpeed * var.XYswap) + ( -var.RightDown * var.YawSpeed * var.XYswap )
+   mouse.DirectInputX = int(var.MouseX)
+   mouse.DirectInputY = int(var.MouseY)
+   var.MouseX = var.MouseX + ( var.SpeedX / (10500000 - EnsureMapRange(var.Speed, 0, 100, 0, 10000000) ) )
+   var.MouseY = var.MouseY - ( var.SpeedY / (10500000 - EnsureMapRange(var.Speed, 0, 100, 0, 10000000) ) )
+  
+
+/* // for mouse.x and mouse.y instead
+   mouse.x = var.MouseX
+   mouse.y = var.MouseY
+   var.MouseX = var.MouseX + ( var.SpeedX / (20500 - EnsureMapRange(var.Speed, 0, 100, 0, 20000) ) )
+   var.MouseY = var.MouseY - ( var.SpeedY / (20500 - EnsureMapRange(var.Speed, 0, 100, 0, 20000) ) )
+*/
+}
+if var.MoveButton = false {
+   var.MouseX = mouse.DirectInputX
+   var.MouseY = mouse.DirectInputY
+
+
+/* // for mouse.x and mouse.y insteadte.Sw
+   var.MouseX = mouse.x
+   var.MouseY = mouse.y
+*/
+}
+
+//Say "enable voice commands" to begin.
+if said("enable voice commands") or said("listen",5) or said("begin listening") then
+   var.listen=true
+   say("voice commands enabled")
+end if
+
+if said("disable voice commands") or said("don't listen",5) or said("stop listening") then
+   var.listen=false
+   say("voice commands disabled")
+end if
+
+if said("god dammit")
+   say("you suck")
+end if
+
+if said("I died")
+   say("ha ha ha ha ha ha... ha")
+end if
+
+if said("fuck",1)
+   say("quit being such a little bitch")
+end if
+
+if said("fuck you")
+   say("fuck me... no, fuck you!")
+end if
+
+if said("hey baby, you lookin good")
+   say("I know. I'll suck your dick for five dollars")
+end if
+
+if said("shit")
+   say("yup")
+end if
+
+if var.listen ==true then
+
+//general
+key.c = said("automove")
+key.Escape = said("computer") or said ("pause") or said("escape") or said("exit")
+key.m = said("map")
+key.i = said("equipment") or said("inventory") or said("items")
+key.p = said("magic") or said("powers")
+key.j = said("journal") or said("book")
+key.Slash = said("skills")
+key.q = said("favorites")
+key.tab = said("menu")
+key.e = said("open") or said("use") or said("talk")
+key.r = said("on guard") or said("take all")
+key.capslock = said("walk") or said("run")
+key.leftcontrol = said("sneak")
+key.end = said("maximum item count")
+key.printscreen = said("print screen") or said("screenshot") or said("snapshot")
+key.t = said("wait")
+
+//weapons
+mouse.LeftButton = said("fire") or said("take this")
+mouse.rightbutton = said("shield") or said("block")
+key.z = said("fus ro dah") or said("foose ro dah") or said("abra kadabra") or said("alakazam") or said("expelliarmus")
+
+//POWERS
+key.1 = said("1",1) or said("number 1") or said("power 1")
+key.2 = said("2",1) or said("number 2") or said("power 2")
+key.3 = said("3",1) or said("number 3") or said("power 3")
+key.4 = said("4",1) or said("number 4") or said("power 4")
+key.5 = said("5",1) or said("number 5") or said("power 5")
+key.6 = said("6",1) or said("number 6") or said("power 6")
+key.7 = said("7",1) or said("number 7") or said("power 7")
+key.8 = said("8",1) or said("number 8") or said("power 8")
+
+end if
+
+

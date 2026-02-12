@@ -1,0 +1,262 @@
+﻿/*super street fighter IV Arcade Edition
+____________________________________________________
+FAAST > keys > SSFIV
+FAAST > combo keys > GlovePie > key macro > SSFIV
+
+               -or-
+
+FAAST > keys > GlovePie > PPJoy > SSFIV
+
+and macro
+
+plus voice if kinect microphone is working
+__________________________________________
+basic controls:
+                                  pad      keys
+joystick u/d/l/r              5/2/1/3      5/1/2/3
+start                           *           e
+select                           /           r
+punch: light                   4            4
+       -------medium            a            t
+       heavy                    6            6
+       -------L+M+H              s             y
+kick:  light                     7            7
+       -----------medium          d            u
+       heavy                      8            8
+       ------------L+M+H          f             i
+throw                             q             9
+focus attack                       0             0
+taunt                              w             -
+
+15-17 buttons/actions
+perhaps leave out medium!
+____________________________________________________
+combos!
+
+how many joystick speeds?
+for digital>analog thru ppjoy
+if possible, needs vrpn thruput, may be too much hassle.
+look into it, do not attempt to implement in first draft
+
+*/
+
+if swallow(multiply) == true
+     PPJoy1.Digital17 = true
+endif
+if multiply == false
+     PPJoy1.Digital17 = false
+endif
+
+if swallow(divide) == true
+     PPJoy1.Digital9 = true
+endif
+if divide == false
+     PPJoy1.Digital9 = false
+endif
+
+if swallow(numpad1) == true
+     PPJoy1.Digital1 = true
+endif
+if numpad1 == false
+     PPJoy1.Digital1 = false
+endif
+
+if swallow(numpad2) == true
+     PPJoy1.Digital2 = true
+endif
+if numpad2 == false
+     PPJoy1.Digital2 = false
+endif
+
+if swallow(numpad3) == true
+     PPJoy1.Digital3 = true
+endif
+if numpad3 == false
+     PPJoy1.Digital3 = false
+endif
+
+if swallow(numpad4) == true
+     PPJoy1.Digital4 = true
+endif
+if numpad4 == false
+     PPJoy1.Digital4 = false
+endif
+
+if swallow(numpad5) == true
+     PPJoy1.Digital5 = true
+endif
+if numpad5 == false
+     PPJoy1.Digital5 = false
+endif
+
+if swallow(numpad6) == true
+     PPJoy1.Digital6 = true
+endif
+if numpad6 == false
+     PPJoy1.Digital6 = false
+endif
+
+if swallow(numpad7) == true
+     PPJoy1.Digital7 = true
+endif
+if numpad7 == false
+     PPJoy1.Digital7 = false
+endif
+
+if swallow(numpad8) == true
+     PPJoy1.Digital8 = true
+endif
+if numpad8 == false
+     PPJoy1.Digital8 = false
+endif
+
+if swallow(key.Q) == true
+     PPJoy1.Digital10 = true
+endif
+if key.Q == false
+     PPJoy1.Digital10 = false
+endif
+
+if swallow(numpad0) == true
+     PPJoy1.Digital0 = true
+endif
+if numpad0 == false
+     PPJoy1.Digital0 = false
+endif
+
+if swallow(key.w) == true
+     PPJoy1.Digital11 = true
+endif
+if key.w == false
+     PPJoy1.Digital11 = false
+endif
+
+if swallow(key.A) == true
+     PPJoy1.Digital12 = true
+endif
+if key.a == false
+     PPJoy1.Digital12 = false
+endif
+
+if swallow(key.s) == true
+     PPJoy1.Digital13= true
+endif
+if key.s == false
+     PPJoy1.Digital13 = false
+endif
+
+if swallow(key.d) == true
+     PPJoy1.Digital14 = true
+endif
+if key.d == false
+     PPJoy1.Digital14 = false
+endif
+
+if swallow(key.f) == true
+     PPJoy1.Digital15 = true
+endif
+if key.f == false
+     PPJoy1.Digital15 = false
+endif
+
+
+
+
+
+//player 2
+
+if swallow(key.1) == true
+     PPJoy2.Digital1 = true
+endif
+if key.1 == false
+     PPJoy2.Digital1 = false
+endif
+
+if swallow(key.2) == true
+     PPJoy2.Digital2 = true
+endif
+if key.2 == false
+     PPJoy2.Digital2 = false
+endif
+
+if swallow(key.3) == true
+     PPJoy2.Digital3 = true
+endif
+if key.3 == false
+     PPJoy2.Digital3 = false
+endif
+
+if swallow(key.4) == true
+     PPJoy2.Digital4 = true
+endif
+if key.4 == false
+     PPJoy2.Digital4 = false
+endif
+
+if swallow(key.5) == true
+     PPJoy2.Digital5 = true
+endif
+if key.5 == false
+     PPJoy2.Digital5 = false
+endif
+
+if swallow(key.6) == true
+     PPJoy2.Digital6 = true
+endif
+if key.6 == false
+     PPJoy2.Digital6 = false
+endif
+
+if swallow(key.7) == true
+     PPJoy2.Digital7 = true
+endif
+if key.7 == false
+     PPJoy2.Digital7 = false
+endif
+
+if swallow(key.8) == true
+     PPJoy2.Digital8 = true
+endif
+if key.8 == false
+     PPJoy2.Digital8 = false
+endif
+
+if swallow(key.9) == true
+     PPJoy2.Digital9 = true
+endif
+if key.9 == false
+     PPJoy2.Digital9 = false
+endif
+
+if swallow(key.0) == true
+     PPJoy2.Digital0 = true
+endif
+if key.0 == false
+     PPJoy2.Digital0 = false
+endif
+
+if swallow(key.Minus) == true
+     PPJoy2.Digital11 = true
+endif
+if key.minus == false
+     PPJoy2.Digital11 = false
+endif
+
+
+/*
+if swallow(key.E) == true
+     PPJoy1.Digital3 = true
+     wait 80ms
+     PPJoy1.Digital2 = true
+     PPJoy1.Digital3 = false
+     wait 80ms
+     PPJoy1.Digital1 =true
+     PPJoy1.Digital2 = false
+     wait 80ms
+     PPJoy1.Digital1 = false
+     wait 50ms
+     PPJoy1.Digital4 = true
+     wait 80ms
+     PPJoy1.Digital4 = false
+endif
+

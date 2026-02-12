@@ -1,0 +1,15 @@
+﻿var.weight = BalanceBoard.Weight
+var.right = balanceboard.WeightFront/balanceboard.Weight
+var.left = balanceboard.WeightBack/balanceboard.Weight
+var.up = BalanceBoard.weightright/balanceboard.Weight
+var.down = balanceboard.weightleft/balanceboard.Weight
+
+
+var.xaxis = var.right - var.left
+var.yaxis = var.up - var.down
+
+obj1.x = -var.xaxis
+obj1.Z = var.yaxis
+obj1.y = .3-var.weight/50
+
+obj1.colour = [10%,60%,30%]

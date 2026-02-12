@@ -1,0 +1,9 @@
+﻿if swallow(key.a) == true {
+   var.hadoken1 = true
+   wait 2s
+   var.hadoken1 = false
+}
+if swallow(key.B) and var.hadoken1=true {
+   say("good job")
+   var.hadoken1 = false
+}

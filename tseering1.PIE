@@ -1,0 +1,123 @@
+﻿If pressed(g)
+   toggle(var.Steer)
+
+EndIf
+
+//Blink rate
+var.Blink = 100ms
+
+If Var.Steer = False
+//Menu navigation
+Wiimote.Leds = 1
+wait var.Blink
+Wiimote.Leds = 3
+wait var.Blink
+Wiimote.Leds = 7
+wait var.Blink
+Wiimote.Leds = 15
+wait var.Blink
+   Up = Wiimote.Right
+   Down = Wiimote.Left
+   Left = Wiimote.Up
+   Right = Wiimote.Down
+
+ElseIf Var.Steer = True
+PPJoy.Analog0 = maprange(Wiimote.steeringangle,-180,180,-1,1) //Steering controls
+
+var.rymin = 4
+var.rymax = 8
+
+var.rxmin = 6
+var.rxmax = 10
+
+var.ryoffset = -5 // This is shown as the X axis.
+var.rxoffset = -3 // This is shown as the Y axis.
+
+var.ry = BalanceBoard.WeightLeft
+var.rx = BalanceBoard.WeightRight
+
+
+var.ry = var.ry + var.ryoffset
+var.rx = var.rx + var.rxoffset 
+
+ppjoy.analog3 = MapRange(var.ry, var.rymin, var.rymax, -1, 1)
+ppjoy.analog4 = MapRange(var.rx, var.rxmin, var.rxmax, -1, 1)
+
+if ppjoy.analog3 < 0 then ppjoy.analog3 = 0
+if ppjoy.analog4 < 0 then ppjoy.analog4 = 0
+
+
+
+ppjoy.digital1 = Wiimote.A 
+ppjoy.digital2 = Wiimote.B 
+ppjoy.digital3 = Wiimote.Home 
+ppjoy.digital4 = Wiimote.Plus
+ppjoy.digital5 = Wiimote.Minus
+ppjoy.digital6 = Wiimote.Up
+ppjoy.digital7 = Wiimote.Down
+ppjoy.digital8 = Wiimote.Left
+ppjoy.digital9 = Wiimote.Right
+ppjoy.digital10 = Wiimote.Two
+ppjoy.digital11 = Wiimote.One
+
+//Blink rate
+var.Blinkr = 500ms
+
+if 0< ppjoy.analog4< 0.25 then
+Wiimote.Leds = 1
+wait var.Blinkr
+Wiimote.Leds = 0
+wait var.Blinkr
+elseif ppjoy.analog4 = 0.25 then
+Wiimote.Leds = 1
+elseif 0.25 < ppjoy.analog4< 0.50 then
+Wiimote.Leds = 3
+wait var.Blinkr
+Wiimote.Leds = 1
+wait var.Blinkr
+elseif ppjoy.analog4 = 0.50 then
+Wiimote.Leds = 3
+elseif 0.50 < ppjoy.analog4< 0.75 then
+Wiimote.Leds = 7
+wait var.Blinkr
+Wiimote.Leds = 3
+wait var.Blinkr
+elseif ppjoy.analog4 = 0.75 then
+Wiimote.Leds = 7
+elseif 0.75 < ppjoy.analog4< 1 then
+Wiimote.Leds = 15
+wait var.Blinkr
+Wiimote.Leds = 7
+wait var.Blinkr
+elseif ppjoy.analog4 = 1 then
+Wiimote.Leds = 15
+else
+Wiimote.Leds = 0
+endif
+
+var.blinkest = 300ms
+
+if (!var.init)
+   PPJoy1.Analog2 = 0
+   var.init = true
+endif
+
+if (mouse.WheelDown)
+   PPJoy1.Analog2 = 1
+   Wait 200ms
+endif
+
+if (mouse.WheelUp)
+   if (PPJoy1.Analog2 > 0)
+      PPJoy1.Analog2 = 0
+   endif
+   Wait 200ms
+endif
+
+if ppjoy.analog2 > 0 then
+Wiimote.Leds = 15
+wait var.Blinkest
+endif
+
+endif
+debug = 'RawX: ' + PPjoy.Analog0 + ' RawY: ' + ppjoy.analog4 + "HB: " + ppjoy.analog2 + "MY: " + var.my + "R: " + ppjoy.analog4

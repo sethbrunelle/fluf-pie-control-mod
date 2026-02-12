@@ -1,0 +1,5 @@
+﻿PPJoy1.Digital2 = wiimote.home
+
+PPJoy2.Digital2 = wiimote.Plus
+key.t = wiimote.Minus
+

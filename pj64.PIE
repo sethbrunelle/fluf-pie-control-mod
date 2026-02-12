@@ -1,0 +1,18 @@
+﻿//Wiimote N64
+
+keyboard.w = nunchuk.Up
+keyboard.s = nunchuk.Down
+keyboard.a = nunchuk.Left
+keyboard.d = nunchuk.Right
+keyboard.leftshift = nunchuk.Z
+keyboard.rightshift = nunchuk.C
+keyboard.up = wiimote.Up
+keyboard.down = wiimote.Down
+keyboard.left = wiimote.Left
+keyboard.right = wiimote.Right
+keyboard.semicolon = wiimote.A
+keyboard.l = wiimote.B or wiimote.Shake
+keyboard.enter = wiimote.Plus
+keyboard.n = wiimote.Minus
+
+//movement controls here:

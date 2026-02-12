@@ -1,0 +1,9 @@
+﻿
+pie.framerate = 60hz
+
+var.a = wiimote.RelAccz
+var.v = var.v + delta(var.a)/2 //integrate
+var.d = var.d + var.v + var.a/2
+
+
+

@@ -1,0 +1,38 @@
+﻿//kinect
+
+
+var.handup = swallow(numpad8)
+var.handdown = swallow(numpad2)
+
+var.handfront = swallow(numpad5)
+var.presshands = swallow(numpad7)
+
+var.left = swallow(key.1)
+var.right = swallow(key.3)
+var.up = swallow(key.5)
+var.down = swallow(key.2,)
+var.start = swallow(key.End)
+
+var.jump = swallow(numpad1)
+var.handright = swallow(numpad6)
+var.crouch = swallow(numpad0)
+var.handleft = swallow(numpad4)
+
+
+
+ppjoy4.Digital4 = var.handplant
+
+
+ppjoy4.digital6 = var.up
+ppjoy4.Digital7 = var.down
+ppjoy4.digital8 = var.left
+ppjoy4.Digital9 = var.right
+ppjoy4.Digital3 = var.start   //start/pause
+
+//PPJoy4.Digital0 = var.jump
+ppjoy4.Digital1 = var.handright      //R trigger = method grab and right punch
+ppjoy4.Digital2 + PPJoy4.Digital0 = var.crouch                            //b button = tweak
+ ppjoy4.digital2 = swallow(key.b)
+ ppjoy4.digital0 = swallow(key.a)
+
+ppjoy4.Digital11 = var.handleft                           // L

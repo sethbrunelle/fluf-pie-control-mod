@@ -1,0 +1,52 @@
+﻿
+/*var.movex = roundto(wiimote.relaccx,-2)
+var.movey = roundto(wiimote.relaccy,-2)
+var.movez = roundto(wiimote.relaccz,-2)
+var.vectormove = roundto(sqrt(sqr(wiimote.relaccx)+sqr(wiimote.relaccy)+sqr(wiimote.relaccz)),-2)
+*/
+
+var.jerkx = delta(wiimote.rawaccx)
+var.jerky = delta(wiimote.rawaccy)                  // try using DeadZone(x,a) function
+var.jerkz = delta(wiimote.rawaccz)
+var.jerk = sqrt(sqr(var.jerkx)+sqr(var.jerky)+sqr(var.jerkz))
+
+
+
+if .6<var.jerk<1 {
+   var.CONSTANTUPDOWN = TRUE
+else
+    var.CONSTANTUPDOWN = FALSE
+    }
+
+var.yaw = int(wiimote.yaw)
+var.pitch = int(wiimote.pitch)
+var.roll = int(wiimote.roll)
+if key.s == true {
+   var.s = true
+   }
+if key.d == true {
+   var.s = false
+   }
+if var.s == false {
+   var.pos = 0
+else
+var.pos += var.jerk // final integer approximates 1 meter
+}
+
+var.vp = delta(var.pos)
+
+if var.vp>.5{
+var.vq = var.vp
+else
+var.vq = 0
+}
+
+var.v = 3*log2(3*smooth(var.vq,10)+1)
+var.dv += var.v
+
+
+if var.v = 0{
+var.what = true
+else
+var.what = false
+}

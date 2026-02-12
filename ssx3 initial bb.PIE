@@ -1,0 +1,67 @@
+﻿
+var.jumpbutton = wiimote.b
+
+var.weight = BalanceBoard.Weight
+var.right = balanceboard.WeightFront/balanceboard.Weight
+var.left = balanceboard.WeightBack/balanceboard.Weight
+var.up = BalanceBoard.weightright/balanceboard.Weight
+var.down = balanceboard.weightleft/balanceboard.Weight
+var.xaxis = var.right - var.left
+var.yaxis = var.down - var.up
+
+if -.1<var.xaxis then var.jumpSpinleft = false
+if var.xaxis<.1 then var.jumpSpinright = false
+if var.yaxis<.1 then var.jumpFlipfront = false
+if -.1<var.yaxis then var.jumpFlipback = false
+
+ppjoy4.digital6 = var.jumpFlipfront
+ppjoy4.Digital7 = var.jumpFlipback
+ppjoy4.digital8 = var.jumpSpinleft
+ppjoy4.Digital9 = var.jumpSpinright
+
+PPJoy4.Digital0 = wiimote.A
+ppjoy4.Digital1 = wiimote.down or wiimote.Stabbing
+ppjoy4.Digital2 = nunchuck.C
+ppjoy4.Digital3 = wiimote.Plus
+ppjoy4.Digital4 = wiimote.One
+ppjoy4.Digital11 = wiimote.minus or nunchuck.Stabbing
+
+//ssx3
+ppjoy4.Digital5 = wiimote.Two
+ppjoy4.digital10 = nunchuck.z
+
+
+
+
+if balanceboard.weight > 5 {
+
+if var.jumpbutton == false {
+
+PPJoy4.Analog0 = 1.1*var.xaxis
+PPJoy4.Analog1 = 1.4*var.yaxis
+ppjoy4.analog2 = nunchuck.JoyX
+ppjoy4.analog3 = nunchuck.JoyY
+}
+
+
+
+if var.jumpbutton == true {
+if var.xaxis<-.1 then var.jumpSpinleft = true
+if .1<var.xaxis then var.jumpSpinright = true
+if .1<var.yaxis then var.jumpFlipfront = true
+if var.yaxis<-.1 then var.jumpFlipback = true
+}
+if -.1<var.xaxis then var.jumpSpinleft = false
+if var.xaxis<.1 then var.jumpSpinright = false
+if var.yaxis<.1 then var.jumpFlipfront = false
+if -.1<var.yaxis then var.jumpFlipback = false
+
+
+}
+if balanceboard.weight < 5 {
+PPJoy4.Analog0 = nunchuck.Joyx
+PPJoy4.Analog1 = -nunchuck.Joyy
+
+
+}
+

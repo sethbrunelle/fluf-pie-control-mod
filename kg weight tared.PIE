@@ -1,0 +1,13 @@
+﻿                                            wait 20ms //Short wait before getting 
+
+//initial Balance Board values
+PPjoy.Analog1 = 0 //Resets the "pedals" at the beginning of the loop
+if !var.init 
+var.BBJy = BalanceBoard.Weight
+var.init = True 
+EndIf 
+var.BBy = BalanceBoard.Weight - var.BBJy //Subtracts the initial values from the current 
+
+//values
+var.rbby = trunc(var.BBy)
+debug = "WEIGHT " + var.rbby

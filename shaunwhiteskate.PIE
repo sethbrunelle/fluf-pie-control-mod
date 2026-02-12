@@ -1,0 +1,119 @@
+﻿//needs work on puch down, now random trick on no buton press...
+
+//otherwise super fun imho
+
+
+var.weight = BalanceBoard.Weight
+var.right = balanceboard.WeightFront/balanceboard.Weight
+var.left = balanceboard.WeightBack/balanceboard.Weight
+var.up = BalanceBoard.weightright/balanceboard.Weight
+var.down = balanceboard.weightleft/balanceboard.Weight
+
+
+var.xaxis = var.right - var.left
+var.yaxis = var.up - var.down
+
+
+var.tweakbutton = wiimote.B
+var.jumpbutton =  wiimote.A
+var.manualbutton = wiimote.LookingAtRightWatch or wiimote.LookingAtWatch
+
+if wiimote.two {
+var.calibjump = var.weight+var.weight/2.7              //calibtration
+var.calibair = var.weight/3.5
+}
+var.smoothjump = smooth(var.weight,30)+var.calibair
+
+
+if var.weight > 5 {                   //more than 5lbs enables bboard
+if var.manualbutton == false and var.tweakbutton == false and var.jumpbutton==false{
+PPJoy5.Analog0 = 1.1*var.xaxis
+PPJoy5.Analog1 = ensuremaprange(var.yaxis,-.6,0,-1,0)
+PPJoy5.Analog3 = 0
+PPJoy5.Analog5 = ensuremaprange(var.yaxis,0,.6,0,1)
+
+PPJoy5.Digital0 = wiimote.left or var.jump
+}
+if var.jumpbutton==true and var.manualbutton == false and var.tweakbutton == false{
+PPJoy5.Analog3 = 1.1*var.xaxis
+PPJoy5.Analog5 = ensuremaprange(var.yaxis,-.7,.7,-1,1)
+PPJoy5.Analog0 = 0
+PPJoy5.Analog1 = 0
+}
+if (var.manualbutton == true or var.tweakbutton == true) and var.jumpbutton == false{
+PPJoy5.Analog0 = 1.1*var.xaxis
+PPJoy5.Analog1 = ensuremaprange(var.yaxis,-.7,.7,-1,1)
+PPJoy5.Analog3 = 0
+PPJoy5.Analog5 = 0
+}
+if (var.manualbutton == true or var.tweakbutton == true) and var.jumpbutton == true{
+//PPJoy5.Analog0 = 1.1*var.xaxis
+//PPJoy5.Analog1 = ensuremaprange(var.yaxis,-.8,.8,-1,1)
+PPJoy5.Analog3 = 1.1*var.xaxis
+PPJoy5.Analog5 = ensuremaprange(var.yaxis,-.6,.6,-1,1)
+}
+}
+
+PPJoy5.Digital0 = wiimote.left
+PPJoy5.Digital1 = wiimote.right
+PPJoy5.Digital2 = wiimote.up
+PPJoy5.Digital3 = wiimote.plus
+PPJoy5.Digital4 = var.manualbutton
+PPJoy5.Digital5 = wiimote.b
+PPJoy5.Digital6 = wiimote.down
+PPJoy5.Digital7 = wiimote.one
+PPJoy5.Digital8 = wiimote.Home
+PPJoy5.Digital9 = key.9
+PPJoy5.Digital10 = key.8
+
+if var.weight>5 and var.calibjump>5{
+if var.weight>var.calibjump or var.weight>var.smoothjump  {
+   var.jump = 1
+else
+   var.jump = 0
+}
+}
+
+if var.weight<5 {
+PPJoy5.Analog0 = 0
+PPJoy5.Analog1 = 0
+PPJoy5.Analog2 = 0
+PPJoy5.Analog3 = 0
+PPJoy5.Analog4 = 0
+PPJoy5.Analog5 = 0
+     }
+
+
+/*
+if var.manualbutton{
+PPJoy1.Analog2 = 1
+else
+PPJoy1.Analog2 = 0
+}
+if var.tweakbutton{
+PPJoy1.Analog3 = 1
+else
+PPJoy1.Analog3 = 0
+}
+*/
+
+/*
+
+needs
+
+left analog
+right analog switch
+manual button - hold up hands
+tweak button
+air/ground up down
+
+push
+nollie button
+revert button
+
+get off/on board button
+random trick button
+stop
+position marker
+position reset
+ */

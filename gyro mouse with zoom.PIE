@@ -1,0 +1,109 @@
+﻿/*
+    WiiMotion Plus Mouse                                  v 2010.01.14
+    by lednerg
+
+    Emulates the basic functionality of a Gyration Air Mouse.
+    Requires GlovePIE version .42 or higher.
+
+    Leave the Wiimote on your desk when starting so it can calibrate.
+    Hold B to move, A = Left-Click, + = Right-Click, Down = Middle-Click.
+*/
+
+
+
+var.MoveButton = wiimote.B
+mouse.LeftButton = wiimote.A
+mouse.RightButton = wiimote.minus
+mouse.MiddleButton = wiimote.plus
+keyboard.space = wiimote.One
+mouse.wheeldown = wiimote.left
+mouse.wheelup = wiimote.right
+esc = wiimote.home
+key.v = wiimote.Two
+
+//zoom in and out cntrl+scroll pressing wiimote.Down
+
+var.ZoomButton = wiimote.down
+
+
+
+var.pulljerkz = smooth(Deadzone(delta(wiimote.rawaccz),.2),10)
+if var.pulljerkz<0 {
+   var.zoomspeed = -(1/2)*abs(var.pulljerkz)^(2)
+elseif var.pulljerkz>0
+   var.zoomspeed = (1/2)*var.pulljerkz^(2)
+else
+    var.zoomspeed = 0
+}
+   /*
+if wiimote.relaccz<0 {
+   var.zoomspeed = -.5*abs(wiimote.relaccz)^(2)
+elseif wiimote.relaccz>0
+   var.zoomspeed = .5*wiimote.relaccz^(2)
+else
+    var.zoomspeed = 0
+}  */
+
+
+if var.zoombutton == true {
+   var.zooms = var.zooms + -200*var.zoomspeed
+   mouse.DirectInputZ = var.zooms
+}
+
+
+
+
+var.Speed = 75   // 0 to 100
+
+PIE.FrameRate = 240hz
+if wiimote.HasMotionPlus = false then debug = "WiiMotion Plus NOT DETECTED!"
+
+   var.YawSpeed = wiimote.MotionPlus.YawSpeed
+   var.PitchSpeed = wiimote.MotionPlus.PitchSpeed
+   var.rollspeed = wiimote.motionplus.rollspeed
+   if SameValue( Smooth(wiimote.SmoothRoll, 10), wiimote.SmoothRoll, 10) then var.Roll = Smooth(wiimote.SmoothRoll, 10) else var.Roll = wiimote.SmoothRoll
+   if var.Roll < 0 and var.Roll >= -90 {
+      var.XYswap = 1 - EnsureMapRange(var.Roll, -90, 0, 0, 1)
+      var.RightDown = -1
+      var.TopUp = 1
+   }
+   if var.Roll <= 90 and var.Roll >= 0 {
+      var.XYswap = 1 - EnsureMapRange(var.Roll, 90, 0, 0, 1)
+      var.RightDown = 1
+      var.TopUp = 1
+   }
+   if var.Roll > 90 and var.Roll <= 180 {
+      var.XYswap = 1 - EnsureMapRange(var.Roll, 90, 180, 0, 1)
+      var.RightDown = 1
+      var.TopUp = -1
+   }
+   if var.Roll < -90 and var.Roll >= -180 {
+      var.XYswap = 1 - EnsureMapRange(var.Roll, -90, -180, 0, 1)
+      var.RightDown = -1
+      var.TopUp = -1
+   }
+   var.SpeedX = var.TopUp * var.YawSpeed - ( var.TopUp * var.YawSpeed * var.XYswap ) + ( var.RightDown * var.PitchSpeed * var.XYswap )
+   var.SpeedY = var.TopUp * var.PitchSpeed - ( var.TopUp * var.PitchSpeed * var.XYswap) + ( -var.RightDown * var.YawSpeed * var.XYswap )
+if wiimote.HasMotionPlus = true and var.MoveButton = true {
+   mouse.DirectInputX = int(var.MouseX)
+   mouse.DirectInputY = int(var.MouseY)
+   var.MouseX = var.MouseX + ( var.SpeedX / (10500000 - EnsureMapRange(var.Speed, 0, 100, 0, 10000000) ) )
+   var.MouseY = var.MouseY - ( var.SpeedY / (10500000 - EnsureMapRange(var.Speed, 0, 100, 0, 10000000) ) )
+/* // for mouse.x and mouse.y instead
+   mouse.x = var.MouseX
+   mouse.y = var.MouseY
+   var.MouseX = var.MouseX + ( var.SpeedX / (20500 - EnsureMapRange(var.Speed, 0, 100, 0, 20000) ) )
+   var.MouseY = var.MouseY - ( var.SpeedY / (20500 - EnsureMapRange(var.Speed, 0, 100, 0, 20000) ) )
+*/
+}
+if var.MoveButton = false {
+   var.MouseX = mouse.DirectInputX
+   var.MouseY = mouse.DirectInputY
+}
+
+/* // for mouse.x and mouse.y instead
+   var.MouseX = mouse.x
+   var.MouseY = mouse.y
+*/
+}
+
